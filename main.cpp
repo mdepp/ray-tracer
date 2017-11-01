@@ -3,6 +3,8 @@
 int main(int argc, char* argv[])
 {
     WindowFramework* fw = new SDLFramework();
-    while(fw.tick());
+    while(fw->tick());
     delete fw;
+
+    return 0;
 }

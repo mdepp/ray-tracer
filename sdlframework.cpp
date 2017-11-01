@@ -27,8 +27,8 @@ bool SDLFramework::tick()
 {
     while (SDL_PollEvent(&m_event))
     {
-        if (event.type == SDL_QUIT) return false;
-        if (event.type == SDLK_UP && event.key.keysym.sym == SDLK_ESCAPE) return false;
+        if (m_event.type == SDL_QUIT) return false;
+        if (m_event.type == SDLK_UP && m_event.key.keysym.sym == SDLK_ESCAPE) return false;
     }
     return true;
 }
@@ -38,8 +38,18 @@ void SDLFramework::clear(glm::vec3 colour)
     SDL_SetRenderDrawColor(m_renderer, colour.r*0xFF, colour.g*0xFF, colour.b*0xFF, 0xFF);
     SDL_RenderClear(m_renderer);
 }
+
 void SDLFramework::drawPixel(uint16_t x, uint16_t y, glm::vec3 colour)
 {
     SDL_SetRenderDrawColor(m_renderer, colour.r*0xFF, colour.g*0xFF, colour.b*0xFF, 0xFF);
     SDL_RenderDrawPoint(m_renderer, x, y);
+}
+
+uint16_t SDLFramework::width()
+{
+    return m_width;
+}
+uint16_t SDLFramework::height()
+{
+    return m_height;
 }

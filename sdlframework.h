@@ -1,3 +1,4 @@
+#pragma once
 #include "windowframework.h"
 #include "util.h"
 #include <SDL2/SDL.h>
