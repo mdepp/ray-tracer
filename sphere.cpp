@@ -17,7 +17,7 @@ bool Sphere::intersect(Ray ray, glm::vec3& intersection)
 
     if (discriminant < 0) return false;
 
-    auto term1 = glm::dot(ray.dir, ray.origin-m_center);
+    auto term1 = -glm::dot(ray.dir, ray.origin-m_center);
     if (discriminant == 0) // Intersects once with sphere
     {
         if (term1 >= 0)
