@@ -6,7 +6,7 @@
 class Sphere : public Object
 {
     Sphere(glm::vec3 center, float radius);
-    bool intersect(Ray ray, glm::vec3& intersection);
+    bool intersect(Ray ray, glm::vec3& intersection) override;
 
 private:
     glm::vec3 m_center;
