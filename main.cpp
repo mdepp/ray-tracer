@@ -1,6 +1,6 @@
 #include "sdlframework.h"
 #include "sphere.h"
-#include <glm/glm.hpp>
+#include "vec.h"
 
 int main(int argc, char* argv[])
 {
@@ -27,9 +27,9 @@ int main(int argc, char* argv[])
             float x = (pixelX-fw->width()/2)*viewportWidth/fw->width();
             float y = (pixelY-fw->height()/2)*viewportHeight/fw->height();
             
-            Ray ray({0, 0, 0}, glm::normalize(glm::vec3(x, y, viewportDepth)));
+            Ray ray({0, 0, 0}, normalize(vec3<>(x, y, viewportDepth)));
 
-            glm::vec3 intersection;
+            vec3<> intersection;
             for(auto object : objects)
             {
                 if (object && object->intersect(ray, intersection))

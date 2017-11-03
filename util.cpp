@@ -1,6 +1,7 @@
 #include "util.h"
+#include "vec.h"
 
-uint16_t encodeColour(glm::vec3 colour)
+uint16_t encodeColour(vec3<float> colour)
 {
     uint16_t r = colour.r * 32;
     uint16_t g = colour.g * 64;

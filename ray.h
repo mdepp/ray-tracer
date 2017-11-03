@@ -5,9 +5,9 @@
  */
 struct Ray
 {
-    Ray(glm::vec3 o, glm::vec3 d)
+    Ray(vec3<> o, vec3<> d)
         : origin(o), dir(d)
     {}
-    vec3 origin;
-    vec3 dir;
+    vec3<> origin;
+    vec3<> dir;
 };

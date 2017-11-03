@@ -1,4 +1,5 @@
 #pragma once
+#include "vec.h"
 
 #ifdef ARDUINO_BUILD
     #include <Arduino.h>
@@ -50,4 +51,4 @@ T pow2(T base)
     return base*base;
 }
 
-uint16_t encodeColour(glm::vec3 colour);
+uint16_t encodeColour(vec3<> colour);

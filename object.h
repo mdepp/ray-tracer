@@ -11,5 +11,5 @@ public:
      * there are one or more intersections, set 'intersection' to the first
      * such intersection.
      */
-    virtual bool intersect(Ray ray, vec3& intersection) = 0;
+    virtual bool intersect(Ray ray, vec3<>& intersection) = 0;
 };

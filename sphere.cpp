@@ -1,26 +1,27 @@
 #include "sphere.h"
 #include "ray.h"
 #include "util.h"
+#include "vec.h"
 
-Sphere::Sphere(glm::vec3 center, float radius)
+Sphere::Sphere(vec3<> center, float radius)
  : m_center(center), m_radius(radius), Object()
 {
 }
 
-bool Sphere::intersect(Ray ray, glm::vec3& intersection)
+bool Sphere::intersect(Ray ray, vec3<>& intersection)
 {
     // As described in https://en.wikipedia.org/wiki/Line–sphere_intersection
-    auto discriminant = pow2(glm::dot(ray.dir, ray.origin-m_center))
-        - glm::distance2(ray.origin, m_center) + pow2(m_radius);
+    auto discriminant = pow2(dot(ray.dir, ray.origin-m_center))
+        - distance2(ray.origin, m_center) + pow2(m_radius);
 
     if (discriminant < 0) return false;
 
-    auto term1 = -glm::dot(ray.dir, ray.origin-m_center);
+    auto term1 = -dot(ray.dir, ray.origin-m_center);
     if (discriminant == 0) // Intersects once with sphere
     {
         if (term1 >= 0)
         {
-            intersection = ray.origin + term1*ray.dir;
+            intersection = ray.origin + ray.dir*term1;
             return true;
         }
         else
@@ -43,13 +44,13 @@ bool Sphere::intersect(Ray ray, glm::vec3& intersection)
             }
             else
             {
-                intersection = ray.origin + maxLength*ray.dir;
+                intersection = ray.origin + ray.dir*maxLength;
                 return true;
             }
         }
         else
         {
-            intersection = ray.origin + minLength*ray.dir;
+            intersection = ray.origin + ray.dir*minLength;
             return true;
         }
     }

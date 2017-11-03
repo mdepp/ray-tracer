@@ -125,6 +125,7 @@
     <ClInclude Include="sdlframework.h" />
     <ClInclude Include="sphere.h" />
     <ClInclude Include="util.h" />
+    <ClInclude Include="vec.h" />
     <ClInclude Include="windowframework.h" />
   </ItemGroup>
   <ItemGroup>

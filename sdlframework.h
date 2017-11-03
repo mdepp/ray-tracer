@@ -1,6 +1,7 @@
 #pragma once
 #include "windowframework.h"
 #include "util.h"
+#include "vec.h"
 #include <SDL2/SDL.h>
 
 class SDLFramework : public WindowFramework
@@ -11,8 +12,8 @@ public:
 
     bool tick() override;
     
-    void clear(glm::vec3 colour) override;
-    void drawPixel(uint16_t x, uint16_t y, glm::vec3 colour) override;
+    void clear(vec3<> colour) override;
+    void drawPixel(uint16_t x, uint16_t y, vec3<> colour) override;
 
     uint16_t width() override;
     uint16_t height() override;

@@ -1,5 +1,6 @@
 #include "sdlframework.h"
 #include "util.h"
+#include "vec.h"
 
 SDLFramework::SDLFramework()
  : m_width(320), m_height(240)
@@ -33,14 +34,14 @@ bool SDLFramework::tick()
     return true;
 }
 
-void SDLFramework::clear(glm::vec3 colour)
+void SDLFramework::clear(vec3<> colour)
 {
     SDL_SetRenderDrawColor(m_renderer, colour.r*0xFF, colour.g*0xFF, colour.b*0xFF, 0xFF);
     SDL_RenderClear(m_renderer);
     SDL_RenderPresent(m_renderer);
 }
 
-void SDLFramework::drawPixel(uint16_t x, uint16_t y, glm::vec3 colour)
+void SDLFramework::drawPixel(uint16_t x, uint16_t y, vec3<> colour)
 {
     SDL_SetRenderDrawColor(m_renderer, colour.r*0xFF, colour.g*0xFF, colour.b*0xFF, 0xFF);
     SDL_RenderDrawPoint(m_renderer, x, y);
