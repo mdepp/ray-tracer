@@ -1,6 +1,7 @@
-######################################################
-# Linese 38-41 have been added
-#
+# Line 1035 of /usr/share/arduino/Arduino.mk *appends* to CXXFLAGS, so
+# so changes here carry over to Arduino.mk
+# Enable c++ 14, optimize for size, indicate build is for arduino
+CXXFLAGS += -std=gnu++14 -Os -D ARDUINO_BUILD
 
 ######################################################
 # Arduino UA Child Makefile (UPDATED: 31/07/2017)
@@ -34,11 +35,6 @@ endif
 ifndef USER_LIB_PATH
 USER_LIB_PATH = $(ARDUINO_UA_DIR)/libraries
 endif
-
-# Line 1035 of /usr/share/arduino/Arduino.mk *appends* to CXXFLAGS, so
-# so changes here carry over to Arduino.mk
-# Enable c++ 14, optimize for size, indicate build is for arduino
-CXXFLAGS += -std=gnu++14 -Os -D ARDUINO_BUILD
 
 # Default install location of Arduino Makefile
 include /usr/share/arduino/Arduino.mk
