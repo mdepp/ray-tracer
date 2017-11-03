@@ -1,6 +1,6 @@
 #pragma once
-#include <glm/glm.hpp>
 #include "ray.h"
+#include "vec.h"
 
 class Object
 {
@@ -11,5 +11,5 @@ public:
      * there are one or more intersections, set 'intersection' to the first
      * such intersection.
      */
-    virtual bool intersect(Ray ray, glm::vec3& intersection) = 0;
+    virtual bool intersect(Ray ray, vec3& intersection) = 0;
 };

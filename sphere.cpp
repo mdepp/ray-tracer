@@ -1,8 +1,6 @@
 #include "sphere.h"
 #include "ray.h"
 #include "util.h"
-#include <glm/glm.hpp>
-#include <glm/gtx/norm.hpp>
 
 Sphere::Sphere(glm::vec3 center, float radius)
  : m_center(center), m_radius(radius), Object()
