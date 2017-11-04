@@ -113,6 +113,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ILI9341framework.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="sdlframework.cpp" />
     <ClCompile Include="sphere.cpp" />
@@ -120,6 +121,8 @@
     <ClCompile Include="windowframework.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="application.h" />
+    <ClInclude Include="ILI9341framework.h" />
     <ClInclude Include="object.h" />
     <ClInclude Include="ray.h" />
     <ClInclude Include="sdlframework.h" />
