@@ -51,7 +51,7 @@
     template <typename T, typename... Args>
     void debugPrint(T&& first, Args&&... args)
     {
-        std::cout << val;
+        std::cout << first;
         debugPrint(std::forward<Args>(args)...);
     }
 #endif
