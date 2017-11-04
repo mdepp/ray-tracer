@@ -26,10 +26,10 @@ int main(int argc, char* argv[])
     {
         for (decltype(fw->height()) pixelY=0; pixelY<fw->height(); ++pixelY)
         {
-            float x = (pixelX-fw->width()/2)*viewportWidth/fw->width();
-            float y = (pixelY-fw->height()/2)*viewportHeight/fw->height();
-            
-            Ray ray({0, 0, 0}, normalize(vec3<float>(x, y, viewportDepth)));
+            float x = ( (int16_t)pixelX-(int16_t)fw->width()/2)*viewportWidth/fw->width();
+            float y = ( (int16_t)pixelY-(int16_t)fw->height()/2)*viewportHeight/fw->height();
+
+            Ray ray({0, 0, 0}, normalize(vec3<>(x, y, viewportDepth)));
 
             vec3<> intersection;
             for(auto object : objects)
@@ -46,6 +46,7 @@ int main(int argc, char* argv[])
         if (!running) break;
     }
 
+    debugPrint("Finshed drawing");
     while (running)
         running = fw->tick();
 

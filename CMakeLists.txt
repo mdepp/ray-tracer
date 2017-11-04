@@ -1,3 +1,8 @@
+# Usage:
+# mkdir build-cmake
+# cd build-cmake
+# cmake ..
+
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 set(CMAKE_LEGACY_CYGWIN_WIN32 0)
 set(CMAKE_CXX_STANDARD 14)
