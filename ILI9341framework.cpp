@@ -25,7 +25,7 @@ void ILI9341Framework::clear(vec3<> colour)
 }
 void ILI9341Framework::drawPixel(uint16_t x, uint16_t y, vec3<> colour)
 {
-    m_tft.drawPixel(x, y, ILI9341_WHITE);
+    m_tft.drawPixel(x, y, encodeColour(colour));
 }
 uint16_t ILI9341Framework::width()
 {
@@ -37,9 +37,9 @@ uint16_t ILI9341Framework::height()
 }
 uint16_t ILI9341Framework::encodeColour(vec3<float> colour)
 {
-    uint16_t r = colour.r * 32;
-    uint16_t g = colour.g * 64;
-    uint16_t b = colour.b * 32;
+    uint16_t r = colour.r * 31;
+    uint16_t g = colour.g * 63;
+    uint16_t b = colour.b * 31;
 
     return (r << 11) + (g << 5) + b;
 }
