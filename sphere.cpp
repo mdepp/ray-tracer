@@ -4,7 +4,7 @@
 #include "vec.h"
 
 Sphere::Sphere(vec3<> center, float radius)
- : m_center(center), m_radius(radius), Object()
+ : Object(), m_center(center), m_radius(radius)
 {
 }
 

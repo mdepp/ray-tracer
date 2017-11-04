@@ -1,7 +1,7 @@
 #pragma once
 #include "object.h"
 #include "ray.h"
-#include "util.h"
+#include "vec.h"
 
 class Sphere : public Object
 {

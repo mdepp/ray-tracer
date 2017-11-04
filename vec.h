@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include "util.h"
+
 template <typename T=float>
 class vec2
 {

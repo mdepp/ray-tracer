@@ -1,3 +1,5 @@
+#ifndef ARDUINO_BUILD
+
 #include "sdlframework.h"
 #include "util.h"
 #include "vec.h"
@@ -56,3 +58,5 @@ uint16_t SDLFramework::height()
 {
     return m_height;
 }
+
+#endif
