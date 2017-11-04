@@ -31,7 +31,7 @@ bool SDLFramework::tick()
     while (SDL_PollEvent(&m_event))
     {
         if (m_event.type == SDL_QUIT) return false;
-        if (m_event.type == SDLK_UP && m_event.key.keysym.sym == SDLK_ESCAPE) return false;
+        if (m_event.type == SDLKEY_UP && m_event.key.keysym.sym == SDLK_ESCAPE) return false;
     }
     return true;
 }
