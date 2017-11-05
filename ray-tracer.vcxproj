@@ -115,6 +115,7 @@
   <ItemGroup>
     <ClCompile Include="ILI9341framework.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="raytracer.cpp" />
     <ClCompile Include="sdlframework.cpp" />
     <ClCompile Include="sphere.cpp" />
     <ClCompile Include="util.cpp" />
@@ -125,6 +126,7 @@
     <ClInclude Include="ILI9341framework.h" />
     <ClInclude Include="object.h" />
     <ClInclude Include="ray.h" />
+    <ClInclude Include="raytracer.h" />
     <ClInclude Include="sdlframework.h" />
     <ClInclude Include="sphere.h" />
     <ClInclude Include="util.h" />
