@@ -5,7 +5,8 @@
 #include "vec.h"
 
 SDLFramework::SDLFramework()
- : m_width(320), m_height(240),
+// : m_width(320), m_height(240),
+   : m_width(1920), m_height(1080),
     m_updatePeriod(1000)
 {
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -13,8 +14,21 @@ SDLFramework::SDLFramework()
         util::debugPrint("Cannot initialize SDL");
         return;
     }
+    
+    uint32_t windowFlags = 0;
 
-    if (SDL_CreateWindowAndRenderer(m_width, m_height, 0, &m_window, &m_renderer))
+    SDL_DisplayMode dm;
+    if (SDL_GetDesktopDisplayMode(0, &dm) != 0)
+    {
+        util::debugPrint("SDL display mode query failed");
+        return;
+    }
+    if (dm.w == m_width && dm.h == m_height)
+    {
+        windowFlags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+    }
+
+    if (SDL_CreateWindowAndRenderer(m_width, m_height, windowFlags, &m_window, &m_renderer))
     {
         util::debugPrint("Cannot create SDL window and renderer.");
         return;
