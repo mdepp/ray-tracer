@@ -22,6 +22,8 @@ private:
     const uint16_t m_width;
     const uint16_t m_height;
 
+    vec3<> m_backgroundColour;
+
     SDL_Window* m_window;
     SDL_Renderer* m_renderer;
     SDL_Event m_event;

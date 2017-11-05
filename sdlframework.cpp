@@ -38,6 +38,7 @@ bool SDLFramework::tick()
 
 void SDLFramework::clear(vec3<> colour)
 {
+    m_backgroundColour = colour;
     SDL_SetRenderDrawColor(m_renderer, colour.r*0xFF, colour.g*0xFF, colour.b*0xFF, 0xFF);
     SDL_RenderClear(m_renderer);
     SDL_RenderPresent(m_renderer);
@@ -45,6 +46,7 @@ void SDLFramework::clear(vec3<> colour)
 
 void SDLFramework::drawPixel(uint16_t x, uint16_t y, vec3<> colour)
 {
+    if (colour == m_backgroundColour) return;
     SDL_SetRenderDrawColor(m_renderer, colour.r*0xFF, colour.g*0xFF, colour.b*0xFF, 0xFF);
     SDL_RenderDrawPoint(m_renderer, x, y);
     SDL_RenderPresent(m_renderer);
