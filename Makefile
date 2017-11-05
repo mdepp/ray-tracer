@@ -1,7 +1,7 @@
 # Line 1035 of /usr/share/arduino/Arduino.mk *appends* to CXXFLAGS, so
 # so changes here carry over to Arduino.mk
 # Enable c++ 14, optimize for size, indicate build is for arduino
-CXXFLAGS += -std=gnu++14 -Ofast -D ARDUINO_BUILD
+CXXFLAGS += -std=gnu++14 -D ARDUINO_BUILD
 
 ######################################################
 # Arduino UA Child Makefile (UPDATED: 31/07/2017)
