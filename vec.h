@@ -55,6 +55,10 @@ public:
 	{
 		return vec2<T>(x + other.x, y + other.y);
 	}
+    vec2<T> operator-() const noexcept
+    {
+        return vec2<T>(-x, -y);
+    }
 };
 typedef vec2<int> ivec2;
 typedef vec2<float> fvec2;
@@ -112,6 +116,10 @@ public:
 	{
 		return vec3<T>(x + other.x, y + other.y, z + other.z);
 	}
+    vec3<T> operator-() const noexcept
+    {
+        return vec3<T>(-x, -y, -z);
+    }
 };
 
 template<typename T>

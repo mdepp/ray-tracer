@@ -8,8 +8,9 @@ class RayTracer
 public:
     RayTracer()
         : m_backgroundColour(0.f, 0.f, 0.f),
-          m_minIntensityThreshold(0.01f),
-          m_maxRecursionDepth(2)
+          m_minIntensityThreshold(0.001f),
+          m_maxRecursionDepth(2),
+          m_minRayLength(0.001)
     {
         for (int i = 0; i < m_maxObjects; ++i)
             m_objects[i] = nullptr;
@@ -69,7 +70,7 @@ private:
             if (object) // Only consider used objects
             {
                 auto distance = object->intersect(ray, nullptr);
-                if (distance >= 0) // Only consider objects that actually intersect ray
+                if (distance >= m_minRayLength) // Only consider objects that actually intersect ray
                 {
                     if (!closestObject || distance < closestDistance)
                     {
@@ -101,7 +102,7 @@ private:
         if (intersectingObject->intersect(ray, &id) < 0)
             util::debugPrint("castRay() could not find an intersection for supposedly intersecting object.");
         // Calculate next ray and cast it
-        auto reflectedRay = Ray(id.intersection, reflectNormalized(ray.dir, id.normal));
+        auto reflectedRay = Ray(id.intersection, -reflectNormalized(ray.dir, id.normal));
         auto reflectedIntensity = intensity*id.reflectionCoefficient;
         return id.colour*(1.f - id.reflectionCoefficient)
             + castRay(reflectedRay, reflectedIntensity, recursionDepth+1)*id.reflectionCoefficient;
@@ -110,6 +111,9 @@ private:
     vec3<> m_backgroundColour;
     const float m_minIntensityThreshold;
     const uint16_t m_maxRecursionDepth;
+    // If an object is closer than this to the origin of a ray, intersection is not registered (this stops rays colliding directly
+    // after reflecting.
+    const float m_minRayLength;
 
     static const uint16_t m_maxObjects = 3;
     Object* m_objects[m_maxObjects];
@@ -126,7 +130,7 @@ int main(int argc, char* argv[])
     util::debugPrint("Creating objects");
     rt.addObject<Sphere>(vec3<>(0.f, 0.f, 13.f), 2.f, vec3<>(1.f, 1.f, 1.f), 0.3f);
     rt.addObject<Sphere>(vec3<>(0.f, 3.f, 13.f), 1.f, vec3<>(1.f, 0.f, 0.f), 0.1f);
-    rt.addObject<Sphere>(vec3<>(3.f, 2.f, 12.f), 2.f, vec3<>(0.0f, 0.3f, 1.f), 0.5f);
+    rt.addObject<Sphere>(vec3<>(3.f, 2.f, 14.f), 2.f, vec3<>(0.0f, 0.3f, 1.f), 0.5f);
 
     util::debugPrint("Drawing objects");
     if (!rt.render(fw)) return 0;
