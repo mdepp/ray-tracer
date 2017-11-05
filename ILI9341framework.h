@@ -20,8 +20,9 @@ public:
 
 private:
     uint16_t encodeColour(vec3<> colour);
-
     
+    vec3<> m_backgroundColour;
+
     const uint16_t m_width;
     const uint16_t m_height;
 

@@ -5,7 +5,7 @@
 #include "util.h"
 
 ILI9341Framework::ILI9341Framework()
- : m_width(320), m_height(240), m_tft(10, 9)
+ : m_backgroundColour(0.f, 0.f, 0.f), m_width(320), m_height(240), m_tft(10, 9)
 {
     init();
     Serial.begin(9600);
@@ -21,11 +21,13 @@ bool ILI9341Framework::tick()
 }
 void ILI9341Framework::clear(vec3<> colour)
 {
-    m_tft.fillScreen(encodeColour(colour));
+    m_backgroundColour = colour;
+    m_tft.fillScreen(encodeColour(m_backgroundColour));   
 }
 void ILI9341Framework::drawPixel(uint16_t x, uint16_t y, vec3<> colour)
 {
-    m_tft.drawPixel(x, y, encodeColour(colour));
+    if (m_backgroundColour != colour)
+        m_tft.drawPixel(x, y, encodeColour(colour));
 }
 uint16_t ILI9341Framework::width()
 {
@@ -37,10 +39,9 @@ uint16_t ILI9341Framework::height()
 }
 uint16_t ILI9341Framework::encodeColour(vec3<float> colour)
 {
-    uint16_t r = colour.r * 31;
-    uint16_t g = colour.g * 63;
-    uint16_t b = colour.b * 31;
-
+    uint16_t r = constrain(colour.r * 31, 0, 31);
+    uint16_t g = constrain(colour.g * 63, 0, 63);
+    uint16_t b = constrain(colour.b * 31, 0, 31);
     return (r << 11) + (g << 5) + b;
 }
 
