@@ -16,7 +16,7 @@ namespace util
     template <typename S, typename T>
     auto min(S&& a, T&& b)
     {
-        return a < b ? b : a;
+        return a < b ? a : b;
     }
     template <typename T>
     auto inline abs(T&& n)
