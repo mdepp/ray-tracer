@@ -8,9 +8,10 @@ public:
     Object() {}
     virtual ~Object() {}
     /*
-     * Returns true if a ray intersects with this object, otherwise false. If
-     * there are one or more intersections, set 'intersection' to the first
-     * such intersection.
+     * Returns the distance along the ray at which the ray intersects with
+     * this object (this distance is negative if there is no intersection).
+     * If there is an intersection, and if 'intersection' is not nullptr,
+     * set 'intersection' to be the point at which the first intersection occurs.
      */
-    virtual bool intersect(Ray ray, vec3<>& intersection) = 0;
+    virtual float intersect(Ray ray, vec3<>* intersection) = 0;
 };

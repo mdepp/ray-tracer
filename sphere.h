@@ -7,7 +7,7 @@ class Sphere : public Object
 {
 public:
     Sphere(vec3<> center, float radius);
-    bool intersect(Ray ray, vec3<>& intersection) override;
+    float intersect(Ray ray, vec3<>* intersection) override;
 
 private:
     vec3<> m_center;

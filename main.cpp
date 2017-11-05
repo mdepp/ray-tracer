@@ -31,10 +31,9 @@ int main(int argc, char* argv[])
 
             Ray ray({0, 0, 0}, normalize(vec3<>(x, y, viewportDepth)));
 
-            vec3<> intersection;
             for(auto object : objects)
             {
-                if (object && object->intersect(ray, intersection))
+                if (object && object->intersect(ray, nullptr) >= 0)
                 {
                     fw->drawPixel(pixelX, pixelY, {1.f, 1.f, 1.f});
                 }
