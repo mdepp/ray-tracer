@@ -31,7 +31,7 @@ private:
     const float m_minIntensityThreshold;
     const uint16_t m_maxRecursionDepth;
     // If an object is closer than this to the origin of a ray, intersection is not registered (this stops rays colliding directly
-    // after reflecting.
+    // after reflecting).
     const float m_minRayLength;
 
     static const uint16_t m_maxObjects = NumObjects;
