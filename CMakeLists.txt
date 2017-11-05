@@ -9,6 +9,7 @@ set(CMAKE_CXX_STANDARD 14)
 
 set(SOURCES ILI9341framework.cpp
             main.cpp
+            raytracer.cpp
             sdlframework.cpp
             sphere.cpp
             util.cpp
