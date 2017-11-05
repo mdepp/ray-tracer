@@ -129,13 +129,13 @@ T dot(const vec3<T>& v1, const vec3<T>& v2)
 template<typename T>
 T distance2(const vec2<T>& v1, const vec2<T>& v2)
 {
-    return pow2(v1.x - v2.x) + pow2(v1.y - v2.y);
+    return util::pow2(v1.x - v2.x) + util::pow2(v1.y - v2.y);
 }
 
 template<typename T>
 T distance2(const vec3<T>& v1, const vec3<T>& v2)
 {
-    return pow2(v1.x - v2.x) + pow2(v1.y - v2.y) + pow2(v1.z - v2.z);
+    return util::pow2(v1.x - v2.x) + util::pow2(v1.y - v2.y) + util::pow2(v1.z - v2.z);
 }
 
 template<typename T>
@@ -149,4 +149,18 @@ vec3<T> normalize(const vec3<T>& v)
 {
     auto length = v.length();
     return { v.x / length, v.y / length, v.z / length };
+}
+
+/*
+ * Reflect about a normalized axis vector
+ */
+template<typename T>
+vec2<T> reflectNormalized(const vec2<T>& v, const vec2<T>& axis)
+{
+    return axis*dot(v, axis)*2 - v;
+}
+template<typename T>
+vec3<T> reflectNormalized(const vec3<T>& v, const vec3<T>& axis)
+{
+    return axis*dot(v, axis)*2 - v;
 }

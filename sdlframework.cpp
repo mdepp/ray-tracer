@@ -9,13 +9,13 @@ SDLFramework::SDLFramework()
 {
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
-        debugPrint("Cannot initialize SDL");
+        util::debugPrint("Cannot initialize SDL");
         return;
     }
 
     if (SDL_CreateWindowAndRenderer(m_width, m_height, 0, &m_window, &m_renderer))
     {
-        debugPrint("Cannot create SDL window and renderer.");
+        util::debugPrint("Cannot create SDL window and renderer.");
         return;
     }
 }

@@ -3,16 +3,18 @@
 #include "util.h"
 #include "vec.h"
 
-Sphere::Sphere(vec3<> center, float radius)
- : Object(), m_center(center), m_radius(radius)
+Sphere::Sphere(vec3<> center, float radius, vec3<> colour, float reflectionCoefficient)
+    : Object(),
+      m_center(center), m_radius(radius),
+      m_colour(colour), m_reflectionCoefficient(reflectionCoefficient)
 {
 }
 
-float Sphere::intersect(Ray ray, vec3<>* intersection)
+float Sphere::intersect(Ray ray, IntersectionData* intersectionData)
 {
     // As described in https://en.wikipedia.org/wiki/Line–sphere_intersection
-    auto discriminant = pow2(dot(ray.dir, ray.origin-m_center))
-        - distance2(ray.origin, m_center) + pow2(m_radius);
+    auto discriminant = util::pow2(dot(ray.dir, ray.origin-m_center))
+        - distance2(ray.origin, m_center) + util::pow2(m_radius);
 
     if (discriminant < 0) return -1; // No intersection at all
 
@@ -21,7 +23,13 @@ float Sphere::intersect(Ray ray, vec3<>* intersection)
     {
         if (term1 >= 0)
         {
-            if (intersection) *intersection = ray.origin + ray.dir*term1;
+            if (intersectionData)
+            {
+                intersectionData->intersection = ray.origin + ray.dir*term1;
+                intersectionData->colour = m_colour;
+                intersectionData->normal = normalize(intersectionData->intersection - m_center);
+                intersectionData->reflectionCoefficient = m_reflectionCoefficient;
+            }
             return term1;
         }
         else
@@ -33,8 +41,8 @@ float Sphere::intersect(Ray ray, vec3<>* intersection)
     {
         auto term2 = sqrt(discriminant);
         
-        auto minLength = min(term1+term2, term1-term2);
-        auto maxLength = max(term1+term2, term1-term2);
+        auto minLength = util::min(term1+term2, term1-term2);
+        auto maxLength = util::max(term1+term2, term1-term2);
 
         if (minLength < 0)
         {
@@ -44,13 +52,25 @@ float Sphere::intersect(Ray ray, vec3<>* intersection)
             }
             else
             {
-                if (intersection) *intersection = ray.origin + ray.dir*maxLength;
+                if (intersectionData)
+                {
+                    intersectionData->intersection = ray.origin + ray.dir*maxLength;
+                    intersectionData->colour = m_colour;
+                    intersectionData->normal = normalize(intersectionData->intersection - m_center);
+                    intersectionData->reflectionCoefficient = m_reflectionCoefficient;
+                }
                 return maxLength;
             }
         }
         else
         {
-            if (intersection) *intersection = ray.origin + ray.dir*minLength;
+            if (intersectionData)
+            {
+                intersectionData->intersection = ray.origin + ray.dir*minLength;
+                intersectionData->colour = m_colour;
+                intersectionData->normal = normalize(intersectionData->intersection - m_center);
+                intersectionData->reflectionCoefficient = m_reflectionCoefficient;
+            }
             return minLength;
         }
     }
