@@ -3,6 +3,7 @@
 #include "vec.h"
 #include "util.h"
 
+template<uint16_t NumObjects>
 class RayTracer
 {
 public:
@@ -116,22 +117,22 @@ private:
     // after reflecting.
     const float m_minRayLength;
 
-    static const uint16_t m_maxObjects = 3;
+    static const uint16_t m_maxObjects = NumObjects;
     Object* m_objects[m_maxObjects];
 };
 
 int main(int argc, char* argv[])
 {
     WindowFramework* fw = new Application();
-    RayTracer rt;
+    RayTracer<5> rt;
 
     util::debugPrint("Clearing");
     fw->clear({0.f, 0.f, 0.f});
     
     util::debugPrint("Creating objects");
-    rt.addObject<Sphere>(vec3<>(0.f, 0.f, 13.f), 2.f, vec3<>(1.f, 1.f, 1.f), 0.3f);
-    rt.addObject<Sphere>(vec3<>(0.f, 3.f, 13.f), 1.f, vec3<>(1.f, 0.f, 0.f), 0.1f);
-    rt.addObject<Sphere>(vec3<>(3.f, 2.f, 14.f), 2.f, vec3<>(0.0f, 0.3f, 1.f), 0.5f);
+    rt.addObject<Sphere>(vec3<>(0.f, 0.f, 13.f), 2.f, vec3<>(1.f, 1.f, 1.f), 0.9f);
+    rt.addObject<Sphere>(vec3<>(0.f, 3.f, 13.f), 1.f, vec3<>(1.f, 0.f, 0.f), 0.9f);
+    rt.addObject<Sphere>(vec3<>(3.f, 2.f, 14.f), 2.f, vec3<>(0.0f, 0.3f, 1.f), 0.9f);
 
     util::debugPrint("Drawing objects");
     if (!rt.render(fw)) return 0;
