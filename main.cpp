@@ -9,7 +9,7 @@ public:
     RayTracer()
         : m_backgroundColour(0.f, 0.f, 0.f),
           m_minIntensityThreshold(0.001f),
-          m_maxRecursionDepth(2),
+          m_maxRecursionDepth(9),
           m_minRayLength(0.001)
     {
         for (int i = 0; i < m_maxObjects; ++i)
@@ -104,6 +104,7 @@ private:
         // Calculate next ray and cast it
         auto reflectedRay = Ray(id.intersection, -reflectNormalized(ray.dir, id.normal));
         auto reflectedIntensity = intensity*id.reflectionCoefficient;
+
         return id.colour*(1.f - id.reflectionCoefficient)
             + castRay(reflectedRay, reflectedIntensity, recursionDepth+1)*id.reflectionCoefficient;
     }
