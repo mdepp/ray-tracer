@@ -6,11 +6,11 @@
 
 int main(int argc, char* argv[])
 {
-    WindowFramework* fw = new Application();
+    Application fw;
     RayTracer<5> rt;
 
     util::debugPrint("Clearing");
-    fw->clear({0.f, 0.f, 0.f});
+    fw.clear({0.f, 0.f, 0.f});
     
     util::debugPrint("Creating objects");
     //rt.addObject<Sphere>(vec3<>(0.f, 0.f, 13.f), 2.f, vec3<>(1.f, 1.f, 1.f), 0.9f);
@@ -22,16 +22,13 @@ int main(int argc, char* argv[])
     rt.addObject<Sphere>(vec3<>(-3.f, 3.f, 18.f), 2.f, vec3<>(0.f, 0.f, 1.f), 0.7f);
     rt.addObject<Sphere>(vec3<>(0.f, 0.f, 14.f), 1.f, vec3<>(1.f, 1.f, 1.f), 0.3f);
 
-
-
     util::debugPrint("Drawing objects");
-    if (!rt.render(fw)) return 0;
+    if (!rt.render(&fw)) return 0;
 
     util::debugPrint("Finshed drawing");
     bool running = true;
     while (running)
-        running = fw->tick();
+        running = fw.tick();
 
-    delete fw;
     return 0;
 }
