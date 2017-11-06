@@ -1,10 +1,12 @@
 #pragma once
+#include "array.h"
 #include "object.h"
+#include "light.h"
 #include "windowframework.h"
 #include "util.h"
 #include "vec.h"
 
-template<uint16_t NumObjects>
+template<uint16_t NumObjects, uint16_t NumLights>
 class RayTracer
 {
 public:
@@ -13,6 +15,8 @@ public:
 
     template<typename T, typename...Args>
     T* addObject(Args...args);
+    template<typename...Args>
+    PointLight* addLight(Args... args);
     bool render(WindowFramework* fw);
 private:
 
@@ -27,6 +31,11 @@ private:
     */
     vec3<> castRay(Ray ray, float intensity, uint16_t recursionDepth);
 
+    /*
+    * Get colour contributed by lights given a point and normal
+    */
+    vec3<> getLighting(vec3<> point, vec3<> normal);
+
     vec3<> m_backgroundColour;
     const float m_minIntensityThreshold;
     const uint16_t m_maxRecursionDepth;
@@ -34,29 +43,44 @@ private:
     // after reflecting).
     const float m_minRayLength;
 
-    static const uint16_t m_maxObjects = NumObjects;
-    Object* m_objects[m_maxObjects];
+    const uint16_t m_maxObjects = NumObjects;
+    const uint16_t m_maxLights = NumLights;
+    Array<Object*, NumObjects> m_objects;
+    Array<PointLight*, NumLights> m_lights;
 };
 
-template<uint16_t NumObjects>
-RayTracer<NumObjects>::RayTracer()
+template<uint16_t NumObjects, uint16_t NumLights>
+vec3<> RayTracer<NumObjects, NumLights>::getLighting(vec3<> point, vec3<> normal)
+{
+    //return vec3<>(1.f, 1.f, 1.f);
+    vec3<> total(0.f, 0.f, 0.f);
+    for (auto& light : m_lights)
+    {
+        auto diff = light->position - point;
+        total += light->colour * util::max(dot(normal, diff), 0.f) * light->intensity / diff.length2();
+    }
+    return total;
+}
+
+template<uint16_t NumObjects, uint16_t NumLights>
+RayTracer<NumObjects, NumLights>::RayTracer()
     : m_backgroundColour(0.f, 0.f, 0.f),
     m_minIntensityThreshold(0.001f),
     m_maxRecursionDepth(9),
     m_minRayLength(0.001)
 {
-    for (int i = 0; i < m_maxObjects; ++i)
-        m_objects[i] = nullptr;
 }
-template<uint16_t NumObjects>
-RayTracer<NumObjects>::~RayTracer()
+template<uint16_t NumObjects, uint16_t NumLights>
+RayTracer<NumObjects, NumLights>::~RayTracer()
 {
-    for (int i = 0; i < m_maxObjects; ++i)
-        delete m_objects[i];
+    for (auto o : m_objects)
+        delete o;
+    for (auto l : m_lights)
+        delete l;
 }
 
-template<uint16_t NumObjects>
-bool RayTracer<NumObjects>::render(WindowFramework * fw)
+template<uint16_t NumObjects, uint16_t NumLights>
+bool RayTracer<NumObjects, NumLights>::render(WindowFramework * fw)
 {
     const float viewportWidth = 10.f;
     const float viewportHeight = viewportWidth / float(fw->width())*fw->height();
@@ -77,8 +101,8 @@ bool RayTracer<NumObjects>::render(WindowFramework * fw)
     return true;
 }
 
-template<uint16_t NumObjects>
-Object * RayTracer<NumObjects>::getFirstIntersection(Ray ray)
+template<uint16_t NumObjects, uint16_t NumLights>
+Object * RayTracer<NumObjects, NumLights>::getFirstIntersection(Ray ray)
 {
     Object* closestObject = nullptr;
     float closestDistance = -1.f;
@@ -101,8 +125,8 @@ Object * RayTracer<NumObjects>::getFirstIntersection(Ray ray)
     return closestObject;
 }
 
-template<uint16_t NumObjects>
-vec3<> RayTracer<NumObjects>::castRay(Ray ray, float intensity, uint16_t recursionDepth)
+template<uint16_t NumObjects, uint16_t NumLights>
+vec3<> RayTracer<NumObjects, NumLights>::castRay(Ray ray, float intensity, uint16_t recursionDepth)
 {
     if (intensity < m_minIntensityThreshold || recursionDepth > m_maxRecursionDepth) // Base case
         return m_backgroundColour;
@@ -121,15 +145,25 @@ vec3<> RayTracer<NumObjects>::castRay(Ray ray, float intensity, uint16_t recursi
     auto reflectedRay = Ray(id.intersection, -reflectNormalized(ray.dir, id.normal));
     auto reflectedIntensity = intensity*id.reflectionCoefficient;
 
-    return id.colour*(1.f - id.reflectionCoefficient)
+    auto lighting = getLighting(id.intersection, id.normal);
+
+    return id.colour*lighting*(1.f - id.reflectionCoefficient)
         + castRay(reflectedRay, reflectedIntensity, recursionDepth + 1)*id.reflectionCoefficient;
 }
 
-template<uint16_t NumObjects>
+template<uint16_t NumObjects, uint16_t NumLights>
 template<typename T, typename ...Args>
-T * RayTracer<NumObjects>::addObject(Args ...args)
+T * RayTracer<NumObjects, NumLights>::addObject(Args ...args)
 {
-    for (int i = 0; i < m_maxObjects; ++i)
+    if (m_objects.add(new T(util::forward<Args>(args)...)))
+    {
+        return static_cast<T*>(m_objects.back());
+    }
+    else
+    {
+        return nullptr;
+    }
+    /*for (int i = 0; i < m_maxObjects; ++i)
     {
         if (!m_objects[i])
         {
@@ -137,5 +171,19 @@ T * RayTracer<NumObjects>::addObject(Args ...args)
             return static_cast<T*>(m_objects[i]);
         }
     }
-    return nullptr;
+    return nullptr;*/
+}
+
+template<uint16_t NumObjects, uint16_t NumLights>
+template<typename ...Args>
+PointLight* RayTracer<NumObjects, NumLights>::addLight(Args ...args)
+{
+    if (m_lights.add(new PointLight(util::forward<Args>(args)...)))
+    {
+        m_lights.back();
+    }
+    else
+    {
+        return nullptr;
+    }
 }

@@ -59,6 +59,10 @@ public:
     {
         return vec2<T>(-x, -y);
     }
+    vec2<T> operator * (const vec2<T>& other) const noexcept
+    {
+        return vec2<T>(x*other.x, y*other.y);
+    }
 };
 typedef vec2<int> ivec2;
 typedef vec2<float> fvec2;
@@ -119,6 +123,15 @@ public:
     vec3<T> operator-() const noexcept
     {
         return vec3<T>(-x, -y, -z);
+    }
+    vec3<T> operator * (const vec3<T>& other) const noexcept
+    {
+        return vec3<T>(x*other.x, y*other.y, z*other.z);
+    }
+    vec3<T>& operator += (const vec3<T>& other) noexcept
+    {
+        x += other.x; y += other.y; z += other.z;
+        return *this;
     }
 };
 
