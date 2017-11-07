@@ -13,6 +13,10 @@ public:
     {
         m_curSize = sizeof...(Args);
     }
+    Array()
+    {
+        m_curSize = 0;
+    }
 
     template <typename... Args>
     bool add(Args&&... args)
@@ -51,7 +55,7 @@ public:
     {
         return m_data[0];
     }
-    
+
 private:
 
     size_t m_curSize;

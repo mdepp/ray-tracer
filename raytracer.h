@@ -6,7 +6,7 @@
 #include "util.h"
 #include "vec.h"
 
-template<uint16_t NumObjects, uint16_t NumLights>
+template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights, uint16_t NumAmbientLights>
 class RayTracer
 {
 public:
@@ -14,9 +14,17 @@ public:
     ~RayTracer();
 
     template<typename T, typename...Args>
-    T* addObject(Args...args);
+    T* addObject(Args&& ...args);
+
     template<typename...Args>
-    PointLight* addLight(Args... args);
+    bool addPointLight(Args&& ...args);
+
+    template<typename...Args>
+    bool addDirectionalLight(Args&& ...args);
+
+    template<typename...Args>
+    bool addAmbientLight(Args&& ...args);
+
     bool render(WindowFramework* fw);
 private:
 
@@ -43,44 +51,51 @@ private:
     // after reflecting).
     const float m_minRayLength;
 
-    const uint16_t m_maxObjects = NumObjects;
-    const uint16_t m_maxLights = NumLights;
     Array<Object*, NumObjects> m_objects;
-    Array<PointLight*, NumLights> m_lights;
+    Array<PointLight, NumPointLights> m_pointLights;
+    Array<DirectionalLight, NumDirectionalLights> m_directionalLights;
+    Array<AmbientLight, NumAmbientLights> m_ambientLights;
 };
 
-template<uint16_t NumObjects, uint16_t NumLights>
-vec3<> RayTracer<NumObjects, NumLights>::getLighting(vec3<> point, vec3<> normal)
-{
-    //return vec3<>(1.f, 1.f, 1.f);
-    vec3<> total(0.f, 0.f, 0.f);
-    for (auto& light : m_lights)
-    {
-        auto diff = light->position - point;
-        total += light->colour * util::max(dot(normal, normalize(diff)), 0.f) * light->intensity / diff.length2();
-    }
-    return total;
-}
-
-template<uint16_t NumObjects, uint16_t NumLights>
-RayTracer<NumObjects, NumLights>::RayTracer()
+template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights, uint16_t NumAmbientLights>
+RayTracer<NumObjects, NumPointLights, NumDirectionalLights, NumAmbientLights>::RayTracer()
     : m_backgroundColour(0.f, 0.f, 0.f),
     m_minIntensityThreshold(0.001f),
     m_maxRecursionDepth(9),
     m_minRayLength(0.001)
 {
 }
-template<uint16_t NumObjects, uint16_t NumLights>
-RayTracer<NumObjects, NumLights>::~RayTracer()
+template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights, uint16_t NumAmbientLights>
+RayTracer<NumObjects, NumPointLights, NumDirectionalLights, NumAmbientLights>::~RayTracer()
 {
     for (auto o : m_objects)
         delete o;
-    for (auto l : m_lights)
-        delete l;
 }
 
-template<uint16_t NumObjects, uint16_t NumLights>
-bool RayTracer<NumObjects, NumLights>::render(WindowFramework * fw)
+template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights, uint16_t NumAmbientLights>
+vec3<> RayTracer<NumObjects, NumPointLights, NumDirectionalLights, NumAmbientLights>::getLighting(vec3<> point, vec3<> normal)
+{
+    //return vec3<>(1.f, 1.f, 1.f);
+    vec3<> total(0.f, 0.f, 0.f);
+    for (auto& light : m_pointLights)
+    {
+        auto diff = light.position - point;
+        total += light.colour * util::max(dot(normal, normalize(diff)), 0.f) * util::min(light.intensity / diff.length2(), 1.f);
+    }
+    for (auto& light : m_directionalLights)
+    {
+        total += light.colour * util::max(dot(normal, light.direction), 0.f);
+    }
+    for (auto& light : m_ambientLights)
+    {
+        total += light.colour;
+    }
+
+    return total;
+}
+
+template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights, uint16_t NumAmbientLights>
+bool RayTracer<NumObjects, NumPointLights, NumDirectionalLights, NumAmbientLights>::render(WindowFramework * fw)
 {
     const float viewportWidth = 10.f;
     const float viewportHeight = viewportWidth / float(fw->width())*fw->height();
@@ -101,8 +116,8 @@ bool RayTracer<NumObjects, NumLights>::render(WindowFramework * fw)
     return true;
 }
 
-template<uint16_t NumObjects, uint16_t NumLights>
-Object * RayTracer<NumObjects, NumLights>::getFirstIntersection(Ray ray)
+template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights, uint16_t NumAmbientLights>
+Object * RayTracer<NumObjects, NumPointLights, NumDirectionalLights, NumAmbientLights>::getFirstIntersection(Ray ray)
 {
     Object* closestObject = nullptr;
     float closestDistance = -1.f;
@@ -125,8 +140,8 @@ Object * RayTracer<NumObjects, NumLights>::getFirstIntersection(Ray ray)
     return closestObject;
 }
 
-template<uint16_t NumObjects, uint16_t NumLights>
-vec3<> RayTracer<NumObjects, NumLights>::castRay(Ray ray, float intensity, uint16_t recursionDepth)
+template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights, uint16_t NumAmbientLights>
+vec3<> RayTracer<NumObjects, NumPointLights, NumDirectionalLights, NumAmbientLights>::castRay(Ray ray, float intensity, uint16_t recursionDepth)
 {
     if (intensity < m_minIntensityThreshold || recursionDepth > m_maxRecursionDepth) // Base case
         return m_backgroundColour;
@@ -151,9 +166,9 @@ vec3<> RayTracer<NumObjects, NumLights>::castRay(Ray ray, float intensity, uint1
         + castRay(reflectedRay, reflectedIntensity, recursionDepth + 1)*id.reflectionCoefficient;
 }
 
-template<uint16_t NumObjects, uint16_t NumLights>
+template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights, uint16_t NumAmbientLights>
 template<typename T, typename ...Args>
-T * RayTracer<NumObjects, NumLights>::addObject(Args ...args)
+T * RayTracer<NumObjects, NumPointLights, NumDirectionalLights, NumAmbientLights>::addObject(Args&& ...args)
 {
     if (m_objects.add(new T(util::forward<Args>(args)...)))
     {
@@ -174,16 +189,23 @@ T * RayTracer<NumObjects, NumLights>::addObject(Args ...args)
     return nullptr;*/
 }
 
-template<uint16_t NumObjects, uint16_t NumLights>
+template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights, uint16_t NumAmbientLights>
 template<typename ...Args>
-PointLight* RayTracer<NumObjects, NumLights>::addLight(Args ...args)
+bool RayTracer<NumObjects, NumPointLights, NumDirectionalLights, NumAmbientLights>::addPointLight(Args&& ...args)
 {
-    if (m_lights.add(new PointLight(util::forward<Args>(args)...)))
-    {
-        return m_lights.back();
-    }
-    else
-    {
-        return nullptr;
-    }
+    return m_pointLights.add(util::forward<Args>(args)...);
+}
+
+template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights, uint16_t NumAmbientLights>
+template<typename ...Args>
+bool RayTracer<NumObjects, NumPointLights, NumDirectionalLights, NumAmbientLights>::addDirectionalLight(Args&& ...args)
+{
+    return m_directionalLights.add(util::forward<Args>(args)...);
+}
+
+template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights, uint16_t NumAmbientLights>
+template<typename ...Args>
+bool RayTracer<NumObjects, NumPointLights, NumDirectionalLights, NumAmbientLights>::addAmbientLight(Args&& ...args)
+{
+    return m_ambientLights.add(util::forward<Args>(args)...);
 }

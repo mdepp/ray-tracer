@@ -7,7 +7,7 @@
 int main(int argc, char* argv[])
 {
     Application fw;
-    RayTracer<5, 1000> rt;
+    RayTracer<5, 1000, 10, 1> rt;
 
     util::debugPrint("Clearing");
     fw.clear({0.f, 0.f, 0.f});
@@ -25,8 +25,10 @@ int main(int argc, char* argv[])
     for (int i = 0; i < 1000; ++i)
     {
         vec3<> pos(rand()%20-10, rand()%20-10, rand()%20);
-        rt.addLight(pos, 0.2f, vec3<>(1.f, 1.f, 1.f));
+        rt.addPointLight(pos, 0.2f, vec3<>(1.f, 1.f, 1.f));
     }
+
+    rt.addAmbientLight(vec3<>(1.f, 1.f, 1.f));
 
     //rt.addLight(vec3<>(-10.f, 10.f, 15.f), 100.f, vec3<>(1.f, 1.f, 1.f));
     //rt.addLight(vec3<>(10.f, 0.f, 10.f), 100.f, vec3<>(1.f, 1.f, 1.f));
