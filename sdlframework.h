@@ -10,15 +10,20 @@ public:
     SDLFramework();
     virtual ~SDLFramework();
 
-    bool tick() override;
-    
-    void clear(vec3<> colour) override;
-    void drawPixel(uint16_t x, uint16_t y, vec3<> colour) override;
+    virtual bool tick() override;
+    virtual bool idle() override;
 
-    uint16_t width() override;
-    uint16_t height() override;
+    virtual void clear(vec3<> colour) override;
+    virtual void drawPixel(uint16_t x, uint16_t y, vec3<> colour) override;
+
+    virtual uint16_t width() override;
+    virtual uint16_t height() override;
 
 private:
+    void paintBackBuffer();
+    void lockBackBuffer();
+    void unlockBackBuffer();
+
     const uint16_t m_width;
     const uint16_t m_height;
 
