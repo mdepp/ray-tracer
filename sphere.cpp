@@ -3,7 +3,7 @@
 #include "util.h"
 #include "vec.h"
 
-Sphere::Sphere(vec3<> center, float radius, vec3<> colour, float reflectionCoefficient)
+Sphere::Sphere(fvec3 center, float radius, fvec3 colour, float reflectionCoefficient)
     : Object(),
       m_center(center), m_radius(radius),
       m_colour(colour), m_reflectionCoefficient(reflectionCoefficient)

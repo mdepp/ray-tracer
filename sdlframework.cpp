@@ -102,7 +102,7 @@ bool SDLFramework::idle()
     return true;
 }
 
-void SDLFramework::clear(vec3<> colour)
+void SDLFramework::clear(fvec3 colour)
 {
     m_backgroundColour = colour;
     int r = colour.r * 0xFF;
@@ -114,7 +114,7 @@ void SDLFramework::clear(vec3<> colour)
     paintBackBuffer();
 }
 
-void SDLFramework::drawPixel(uint16_t x, uint16_t y, vec3<> colour)
+void SDLFramework::drawPixel(uint16_t x, uint16_t y, fvec3 colour)
 {
     if (colour == m_backgroundColour) return;
     //SDL_SetRenderDrawColor(m_renderer, colour.r*0xFF, colour.g*0xFF, colour.b*0xFF, 0xFF);

@@ -37,14 +37,14 @@ private:
     * Cast a ray and recursively trace its path. Returns the colour "seen"
     * with the ray.
     */
-    vec3<> castRay(Ray ray, float intensity, uint16_t recursionDepth);
+    fvec3 castRay(Ray ray, float intensity, uint16_t recursionDepth);
 
     /*
     * Get colour contributed by lights given a point and normal
     */
-    vec3<> getLighting(vec3<> point, vec3<> normal);
+    fvec3 getLighting(fvec3 point, fvec3 normal);
 
-    vec3<> m_backgroundColour;
+    fvec3 m_backgroundColour;
     const float m_minIntensityThreshold;
     const uint16_t m_maxRecursionDepth;
     // If an object is closer than this to the origin of a ray, intersection is not registered (this stops rays colliding directly
@@ -73,10 +73,10 @@ RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::~RayTracer()
 }
 
 template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>
-vec3<> RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::getLighting(vec3<> point, vec3<> normal)
+fvec3 RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::getLighting(fvec3 point, fvec3 normal)
 {
-    //return vec3<>(1.f, 1.f, 1.f);
-    vec3<> total(0.f, 0.f, 0.f);
+    //return fvec3(1.f, 1.f, 1.f);
+    fvec3 total(0.f, 0.f, 0.f);
     for (auto& light : m_pointLights)
     {
         auto diff = light.position - point;
@@ -105,7 +105,7 @@ bool RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::render(WindowF
             float x = ((int16_t)pixelX - (int16_t)fw->width() / 2)*viewportWidth / fw->width();
             float y = ((int16_t)pixelY - (int16_t)fw->height() / 2)*viewportHeight / fw->height();
 
-            Ray ray({ 0, 0, 0 }, normalize(vec3<>(x, y, viewportDepth)));
+            Ray ray({ 0, 0, 0 }, normalize(fvec3(x, y, viewportDepth)));
             fw->drawPixel(pixelX, pixelY, castRay(ray, 1.f, 1));
             if (!fw->tick()) return false;
         }
@@ -138,7 +138,7 @@ Object * RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::getFirstIn
 }
 
 template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>
-vec3<> RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::castRay(Ray ray, float intensity, uint16_t recursionDepth)
+fvec3 RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::castRay(Ray ray, float intensity, uint16_t recursionDepth)
 {
     if (intensity < m_minIntensityThreshold || recursionDepth > m_maxRecursionDepth) // Base case
         return m_ambientLight.colour;

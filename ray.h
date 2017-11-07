@@ -5,9 +5,9 @@
  */
 struct Ray
 {
-    Ray(vec3<> o, vec3<> d)
+    Ray(fvec3 o, fvec3 d)
         : origin(o), dir(d)
     {}
-    vec3<> origin;
-    vec3<> dir;
+    fvec3 origin;
+    fvec3 dir;
 };

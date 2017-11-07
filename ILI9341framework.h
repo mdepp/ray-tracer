@@ -13,16 +13,16 @@ public:
     virtual bool tick() override;
     virtual bool idle() override;
 
-    virtual void clear(vec3<> colour) override;
-    virtual void drawPixel(uint16_t x, uint16_t y, vec3<> colour) override;
+    virtual void clear(fvec3 colour) override;
+    virtual void drawPixel(uint16_t x, uint16_t y, fvec3 colour) override;
 
     virtual uint16_t width() override;
     virtual uint16_t height() override;
 
 private:
-    uint16_t encodeColour(vec3<> colour);
+    uint16_t encodeColour(fvec3 colour);
 
-    vec3<> m_backgroundColour;
+    fvec3 m_backgroundColour;
 
     const uint16_t m_width;
     const uint16_t m_height;

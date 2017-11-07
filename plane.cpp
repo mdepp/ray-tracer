@@ -3,7 +3,7 @@
 #include "util.h"
 #include "vec.h"
 
-Plane::Plane(vec3<> origin, vec3<> normal, vec3<> colour, float reflectionCoefficient)
+Plane::Plane(fvec3 origin, fvec3 normal, fvec3 colour, float reflectionCoefficient)
   : Object(),
     m_origin(origin),
     m_normal(normalize(normal)),

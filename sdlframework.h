@@ -13,8 +13,8 @@ public:
     virtual bool tick() override;
     virtual bool idle() override;
 
-    virtual void clear(vec3<> colour) override;
-    virtual void drawPixel(uint16_t x, uint16_t y, vec3<> colour) override;
+    virtual void clear(fvec3 colour) override;
+    virtual void drawPixel(uint16_t x, uint16_t y, fvec3 colour) override;
 
     virtual uint16_t width() override;
     virtual uint16_t height() override;
@@ -30,7 +30,7 @@ private:
     const uint32_t m_updatePeriod; // Period to wait before updating the screen (in milliseconds)
     uint32_t m_lastUpdate; // Time (ms) that screen was last updated
 
-    vec3<> m_backgroundColour;
+    fvec3 m_backgroundColour;
 
     int m_backBufferPitch;
     uint32_t* m_backBufferPixels;

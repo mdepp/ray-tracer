@@ -4,9 +4,9 @@
 
 struct IntersectionData
 {
-    vec3<> intersection;
-    vec3<> colour;
-    vec3<> normal;
+    fvec3 intersection;
+    fvec3 colour;
+    fvec3 normal;
     float reflectionCoefficient;
 };
 

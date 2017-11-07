@@ -24,12 +24,12 @@ bool ILI9341Framework::idle()
     delay(10000000);
     return true;
 }
-void ILI9341Framework::clear(vec3<> colour)
+void ILI9341Framework::clear(fvec3 colour)
 {
     m_backgroundColour = colour;
     m_tft.fillScreen(encodeColour(m_backgroundColour));
 }
-void ILI9341Framework::drawPixel(uint16_t x, uint16_t y, vec3<> colour)
+void ILI9341Framework::drawPixel(uint16_t x, uint16_t y, fvec3 colour)
 {
     if (m_backgroundColour != colour)
         m_tft.drawPixel(x, y, encodeColour(colour));

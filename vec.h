@@ -185,3 +185,6 @@ vec3<T> reflectNormalized(const vec3<T>& v, const vec3<T>& axis)
 {
     return axis*dot(v, axis)*2 - v;
 }
+
+using fvec2 = vec2<float>;
+using fvec3 = vec3<float>;
