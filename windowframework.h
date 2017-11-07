@@ -11,6 +11,10 @@ public:
      * Update framework; return false if should quit.
      */
     virtual bool tick() = 0;
+    /*
+     * Idles -- returns false if should quit
+     */
+    virtual bool idle() = 0;
 
     virtual void clear(vec3<> colour) = 0;
     virtual void drawPixel(uint16_t x, uint16_t y, vec3<> colour) = 0;

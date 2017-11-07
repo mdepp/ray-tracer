@@ -10,17 +10,18 @@ public:
     ILI9341Framework();
     virtual ~ILI9341Framework();
 
-    bool tick() override;
+    virtual bool tick() override;
+    virtual bool idle() override;
 
-    void clear(vec3<> colour) override;
-    void drawPixel(uint16_t x, uint16_t y, vec3<> colour) override;
+    virtual void clear(vec3<> colour) override;
+    virtual void drawPixel(uint16_t x, uint16_t y, vec3<> colour) override;
 
-    uint16_t width() override;
-    uint16_t height() override;
+    virtual uint16_t width() override;
+    virtual uint16_t height() override;
 
 private:
     uint16_t encodeColour(vec3<> colour);
-    
+
     vec3<> m_backgroundColour;
 
     const uint16_t m_width;

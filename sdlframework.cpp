@@ -41,8 +41,7 @@ SDLFramework::SDLFramework()
         SDL_TEXTUREACCESS_STREAMING,
         m_width,
         m_height);
-
-    SDL_LockTexture(m_backBuffer, nullptr, (void**)&m_backBufferPixels, &m_backBufferPitch);
+    lockBackBuffer();
 
     m_lastUpdate = SDL_GetTicks();
 }
@@ -51,6 +50,24 @@ SDLFramework::~SDLFramework()
     SDL_DestroyRenderer(m_renderer);
     SDL_DestroyWindow(m_window);
     SDL_Quit();
+}
+
+void SDLFramework::paintBackBuffer()
+{
+    unlockBackBuffer();
+    SDL_RenderCopy(m_renderer, m_backBuffer, nullptr, nullptr);
+    SDL_RenderPresent(m_renderer);
+    lockBackBuffer();
+}
+
+void SDLFramework::unlockBackBuffer()
+{
+    SDL_UnlockTexture(m_backBuffer);
+}
+
+void SDLFramework::lockBackBuffer()
+{
+    SDL_LockTexture(m_backBuffer, nullptr, (void**)&m_backBufferPixels, &m_backBufferPitch);
 }
 
 bool SDLFramework::tick()
@@ -65,13 +82,30 @@ bool SDLFramework::tick()
     auto elapsedTime = currentTime - m_lastUpdate;
     if (elapsedTime >= m_updatePeriod)
     {
+<<<<<<< HEAD
         SDL_UnlockTexture(m_backBuffer);
         SDL_RenderCopy(m_renderer, m_backBuffer, nullptr, nullptr);
         SDL_RenderPresent(m_renderer);
         SDL_LockTexture(m_backBuffer, nullptr, (void**)&m_backBufferPixels, &m_backBufferPitch);
+=======
+        paintBackBuffer();
+>>>>>>> e7737dd8d6e48e9f4706b2de98e32d13ba26122a
         m_lastUpdate = currentTime;
     }
 
+    return true;
+}
+
+bool SDLFramework::idle()
+{
+    paintBackBuffer();
+    if (SDL_WaitEvent(&m_event) == 0)
+    {
+        util::debugPrint("SDL_WaitEvent failed.");
+        return false;
+    }
+    if (m_event.type == SDL_QUIT) return false;
+    if (m_event.type == SDL_KEYUP && m_event.key.keysym.sym == SDLK_ESCAPE) return false;
     return true;
 }
 
@@ -84,15 +118,7 @@ void SDLFramework::clear(vec3<> colour)
     auto argb = 0xFF000000 | (r<<16) | (g<<8) | b;
     for (int i = 0; i < m_width*m_height; ++i)
         *(m_backBufferPixels+i) = argb;
-    SDL_UnlockTexture(m_backBuffer);
-    SDL_RenderCopy(m_renderer, m_backBuffer, nullptr, nullptr);
-    SDL_RenderPresent(m_renderer);
-    SDL_LockTexture(m_backBuffer, nullptr, (void**)&m_backBufferPixels, &m_backBufferPitch);
-
-    /*m_backgroundColour = colour;
-    SDL_SetRenderDrawColor(m_renderer, colour.r*0xFF, colour.g*0xFF, colour.b*0xFF, 0xFF);
-    SDL_RenderClear(m_renderer);
-    SDL_RenderPresent(m_renderer);*/
+    paintBackBuffer();
 }
 
 void SDLFramework::drawPixel(uint16_t x, uint16_t y, vec3<> colour)

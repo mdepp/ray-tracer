@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
     util::debugPrint("Finshed drawing");
     bool running = true;
     while (running)
-        running = fw.tick();
+        running = fw.idle();
 
     return 0;
 }
