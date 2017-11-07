@@ -20,7 +20,7 @@ public:
     };
 
     vec2() : x(0), y(0) {}
-    vec2(T _x, T _y) : x(_x), y(_y) {}  
+    vec2(T _x, T _y) : x(_x), y(_y) {}
 
     T length2() const noexcept
     {

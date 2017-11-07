@@ -82,14 +82,7 @@ bool SDLFramework::tick()
     auto elapsedTime = currentTime - m_lastUpdate;
     if (elapsedTime >= m_updatePeriod)
     {
-<<<<<<< HEAD
-        SDL_UnlockTexture(m_backBuffer);
-        SDL_RenderCopy(m_renderer, m_backBuffer, nullptr, nullptr);
-        SDL_RenderPresent(m_renderer);
-        SDL_LockTexture(m_backBuffer, nullptr, (void**)&m_backBufferPixels, &m_backBufferPitch);
-=======
         paintBackBuffer();
->>>>>>> e7737dd8d6e48e9f4706b2de98e32d13ba26122a
         m_lastUpdate = currentTime;
     }
 
