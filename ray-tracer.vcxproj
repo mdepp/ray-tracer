@@ -115,6 +115,7 @@
   <ItemGroup>
     <ClCompile Include="ILI9341framework.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="plane.cpp" />
     <ClCompile Include="raytracer.cpp" />
     <ClCompile Include="sdlframework.cpp" />
     <ClCompile Include="sphere.cpp" />
@@ -123,8 +124,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application.h" />
+    <ClInclude Include="array.h" />
     <ClInclude Include="ILI9341framework.h" />
+    <ClInclude Include="light.h" />
     <ClInclude Include="object.h" />
+    <ClInclude Include="plane.h" />
     <ClInclude Include="ray.h" />
     <ClInclude Include="raytracer.h" />
     <ClInclude Include="sdlframework.h" />
@@ -136,6 +140,9 @@
   <ItemGroup>
     <None Include=".gitignore" />
     <None Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="CMakeLists.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
