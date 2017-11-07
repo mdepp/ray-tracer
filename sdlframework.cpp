@@ -6,8 +6,8 @@
 
 SDLFramework::SDLFramework()
 //   : m_width(320), m_height(240),
-//   : m_width(1920), m_height(1080),
-    : m_width(1920/2), m_height(1080/2),
+   : m_width(1920), m_height(1080),
+//    : m_width(1920/2), m_height(1080/2),
     m_updatePeriod(1000)
 {
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -35,6 +35,15 @@ SDLFramework::SDLFramework()
         return;
     }
 
+    m_backBuffer = SDL_CreateTexture(
+        m_renderer,
+        SDL_PIXELFORMAT_ARGB8888,
+        SDL_TEXTUREACCESS_STREAMING,
+        m_width,
+        m_height);
+
+    SDL_LockTexture(m_backBuffer, nullptr, (void**)&m_backBufferPixels, &m_backBufferPitch);
+
     m_lastUpdate = SDL_GetTicks();
 }
 SDLFramework::~SDLFramework()
@@ -56,7 +65,10 @@ bool SDLFramework::tick()
     auto elapsedTime = currentTime - m_lastUpdate;
     if (elapsedTime >= m_updatePeriod)
     {
+        SDL_UnlockTexture(m_backBuffer);
+        SDL_RenderCopy(m_renderer, m_backBuffer, nullptr, nullptr);
         SDL_RenderPresent(m_renderer);
+        SDL_LockTexture(m_backBuffer, nullptr, (void**)&m_backBufferPixels, &m_backBufferPitch);    
         m_lastUpdate = currentTime;
     }
 
@@ -66,16 +78,33 @@ bool SDLFramework::tick()
 void SDLFramework::clear(vec3<> colour)
 {
     m_backgroundColour = colour;
+    int r = colour.r * 0xFF;
+    int g = colour.g * 0xFF;
+    int b = colour.b * 0xFF;
+    auto argb = 0xFF000000 | (r<<16) | (g<<8) | b;
+    for (int i = 0; i < m_width*m_height; ++i)
+        *(m_backBufferPixels+i) = argb;
+    SDL_UnlockTexture(m_backBuffer);
+    SDL_RenderCopy(m_renderer, m_backBuffer, nullptr, nullptr);
+    SDL_RenderPresent(m_renderer);
+    SDL_LockTexture(m_backBuffer, nullptr, (void**)&m_backBufferPixels, &m_backBufferPitch);
+
+    /*m_backgroundColour = colour;
     SDL_SetRenderDrawColor(m_renderer, colour.r*0xFF, colour.g*0xFF, colour.b*0xFF, 0xFF);
     SDL_RenderClear(m_renderer);
-    SDL_RenderPresent(m_renderer);
+    SDL_RenderPresent(m_renderer);*/
 }
 
 void SDLFramework::drawPixel(uint16_t x, uint16_t y, vec3<> colour)
 {
     if (colour == m_backgroundColour) return;
-    SDL_SetRenderDrawColor(m_renderer, colour.r*0xFF, colour.g*0xFF, colour.b*0xFF, 0xFF);
-    SDL_RenderDrawPoint(m_renderer, x, y);
+    //SDL_SetRenderDrawColor(m_renderer, colour.r*0xFF, colour.g*0xFF, colour.b*0xFF, 0xFF);
+    //SDL_RenderDrawPoint(m_renderer, x, y);
+
+    int r = util::min(colour.r * 0xFF, 255.f);
+    int g = util::min(colour.g * 0xFF, 255.f);
+    int b = util::min(colour.b * 0xFF, 255.f);
+    *(m_backBufferPixels+x + y*m_width) = 0xFF000000 | (r<<16) | (g<<8) | b;
 }
 
 uint16_t SDLFramework::width()

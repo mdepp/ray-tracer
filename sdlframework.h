@@ -27,6 +27,9 @@ private:
 
     vec3<> m_backgroundColour;
 
+    int m_backBufferPitch;
+    uint32_t* m_backBufferPixels;
+    SDL_Texture* m_backBuffer;
     SDL_Window* m_window;
     SDL_Renderer* m_renderer;
     SDL_Event m_event;

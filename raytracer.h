@@ -57,7 +57,7 @@ vec3<> RayTracer<NumObjects, NumLights>::getLighting(vec3<> point, vec3<> normal
     for (auto& light : m_lights)
     {
         auto diff = light->position - point;
-        total += light->colour * util::max(dot(normal, diff), 0.f) * light->intensity / diff.length2();
+        total += light->colour * util::max(dot(normal, normalize(diff)), 0.f) * light->intensity / diff.length2();
     }
     return total;
 }
@@ -180,7 +180,7 @@ PointLight* RayTracer<NumObjects, NumLights>::addLight(Args ...args)
 {
     if (m_lights.add(new PointLight(util::forward<Args>(args)...)))
     {
-        m_lights.back();
+        return m_lights.back();
     }
     else
     {
