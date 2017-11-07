@@ -12,6 +12,7 @@ set(SOURCES ILI9341framework.cpp
             raytracer.cpp
             sdlframework.cpp
             sphere.cpp
+            plane.cpp
             util.cpp
             windowframework.cpp)
 
