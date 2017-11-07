@@ -15,7 +15,7 @@ SDLFramework::SDLFramework()
         util::debugPrint("Cannot initialize SDL");
         return;
     }
-    
+
     uint32_t windowFlags = 0;
 
     SDL_DisplayMode dm;
@@ -68,7 +68,7 @@ bool SDLFramework::tick()
         SDL_UnlockTexture(m_backBuffer);
         SDL_RenderCopy(m_renderer, m_backBuffer, nullptr, nullptr);
         SDL_RenderPresent(m_renderer);
-        SDL_LockTexture(m_backBuffer, nullptr, (void**)&m_backBufferPixels, &m_backBufferPitch);    
+        SDL_LockTexture(m_backBuffer, nullptr, (void**)&m_backBufferPixels, &m_backBufferPitch);
         m_lastUpdate = currentTime;
     }
 
