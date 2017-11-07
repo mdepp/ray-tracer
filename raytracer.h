@@ -23,7 +23,7 @@ public:
     bool addDirectionalLight(Args&& ...args);
 
     template<typename...Args>
-    bool setAmbientLight(Args&& ...args);
+    void setAmbientLight(Args&& ...args);
 
     bool render(WindowFramework* fw);
 private:
@@ -193,7 +193,7 @@ bool RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::addDirectional
 
 template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>
 template<typename ...Args>
-bool RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::setAmbientLight(Args&& ...args)
+void RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::setAmbientLight(Args&& ...args)
 {
     m_ambientLight = AmbientLight(util::forward<Args>(args)...);
 }
