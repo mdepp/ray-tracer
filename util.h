@@ -86,8 +86,8 @@ namespace util
     template <bool B>
     using bool_constant = integral_constant<bool, B>;
 
-    using true_type = integral_constant<bool, true>;
-    using false_type = integral_constant<bool, false>;
+    using true_type = bool_constant<true>;
+    using false_type = bool_constant<false>;
 
 
     // http://en.cppreference.com/w/cpp/types/is_lvalue_reference
