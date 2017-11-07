@@ -147,7 +147,7 @@ vec3<> RayTracer<NumObjects, NumLights>::castRay(Ray ray, float intensity, uint1
 
     auto lighting = getLighting(id.intersection, id.normal);
 
-    return id.colour*lighting*(1.f - id.reflectionCoefficient)
+    return lighting + id.colour*(1.f - id.reflectionCoefficient)
         + castRay(reflectedRay, reflectedIntensity, recursionDepth + 1)*id.reflectionCoefficient;
 }
 
