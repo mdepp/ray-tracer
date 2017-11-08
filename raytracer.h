@@ -44,6 +44,11 @@ private:
     */
     fvec3 getLighting(fvec3 point, fvec3 normal);
 
+    /*
+     * Reflect a ray from a normal (double-sided)
+     */
+    Ray reflectRay(Ray ray, fvec3 normal);
+
     fvec3 m_backgroundColour;
     const float m_minIntensityThreshold;
     const uint16_t m_maxRecursionDepth;
@@ -61,7 +66,7 @@ template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLi
 RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::RayTracer()
     : m_backgroundColour(0.f, 0.f, 0.f),
     m_minIntensityThreshold(0.001f),
-    m_maxRecursionDepth(30),
+    m_maxRecursionDepth(40),
     m_minRayLength(0.001)
 {
 }
@@ -89,6 +94,15 @@ fvec3 RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::getLighting(f
     total += m_ambientLight.colour;
 
     return total;
+}
+
+template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>
+Ray RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::reflectRay(Ray ray, fvec3 normal)
+{
+    //if (dot(ray.dir, normal) < 0)
+        return { ray.origin, -reflectNormalized(ray.dir, normal) };
+    //else
+    //    return { ray.origin, -reflectNormalized(ray.dir, -normal) };
 }
 
 template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>
@@ -154,7 +168,7 @@ fvec3 RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::castRay(Ray r
     if (intersectingObject->intersect(ray, &id) < 0)
         util::debugPrint("castRay() could not find an intersection for supposedly intersecting object.");
     // Calculate next ray and cast it
-    auto reflectedRay = Ray(id.intersection, -reflectNormalized(ray.dir, id.normal));
+    auto reflectedRay = reflectRay({ id.intersection, ray.dir }, id.normal); // Ray(id.intersection, -reflectNormalized(ray.dir, id.normal));
     auto reflectedIntensity = intensity*id.reflectionCoefficient;
 
     auto lighting = getLighting(id.intersection, id.normal);
