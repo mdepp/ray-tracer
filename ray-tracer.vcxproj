@@ -131,6 +131,7 @@
     <ClInclude Include="plane.h" />
     <ClInclude Include="ray.h" />
     <ClInclude Include="raytracer.h" />
+    <ClInclude Include="reverse_sphere.h" />
     <ClInclude Include="sdlframework.h" />
     <ClInclude Include="sphere.h" />
     <ClInclude Include="util.h" />
