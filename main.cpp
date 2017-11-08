@@ -20,12 +20,15 @@ int main(int argc, char* argv[])
     rt.addObject<Sphere>(fvec3(0.f, 3.f, 13.f), 1.f, fvec3(1.f, 0.f, 0.f), 0.7f);
     rt.addObject<Sphere>(fvec3(3.f, 2.f, 14.f), 2.f, fvec3(0.0f, 0.3f, 1.f), 0.7f);
 
-    rt.addObject<ReverseSphere>(fvec3(0.f, 0.f, 13.5f), 20.f, fvec3(1.f, 1.f, 1.f), 0.9f);
+    //rt.addObject<ReverseSphere>(fvec3(0.f, 0.f, 13.5f), 20.f, fvec3(1.f, 1.f, 1.f), 0.3f);
 
-    //rt.addObject<Plane>(fvec3(10.f, 0.f, 0.f), fvec3(-1.f, 0.f, 0.f), fvec3(1.f, 1.f, 1.f), 0.9f);
-    //rt.addObject<Plane>(fvec3(-10.f, 0.f, 0.f), fvec3(1.f, 0.f, 0.f), fvec3(1.f, 1.f, 1.f), 0.9f);
-    //rt.addObject<Plane>(fvec3(0.f, 3.f, 0.f), fvec3(0.f, -1.f, 0.f), fvec3(1.f, 1.f, 1.f), 0.9f);
-    //rt.addObject<Plane>(fvec3(0.f, -3.f, 0.f), fvec3(0.f, 1.f, 0.f), fvec3(1.f, 1.f, 1.f), 0.9f);
+    rt.addObject<Plane>(fvec3(12.f, 0.f, 0.f), fvec3(-1.f, 0.f, 0.f), fvec3(1.f, 1.f, 1.f), 0.7f);
+    rt.addObject<Plane>(fvec3(-12.f, 0.f, 0.f), fvec3(1.f, 0.f, 0.f), fvec3(1.f, 1.f, 1.f), 0.7f);
+    rt.addObject<Plane>(fvec3(0.f, 12.f, 0.f), fvec3(0.f, -1.f, 0.f), fvec3(1.f, 1.f, 1.f), 0.7f);
+    rt.addObject<Plane>(fvec3(0.f, -12.f, 0.f), fvec3(0.f, 1.f, 0.f), fvec3(1.f, 1.f, 1.f), 0.7f);
+    rt.addObject<Plane>(fvec3(0.f, 0.f, -2.f), fvec3(0.f, 0.f, 1.f), fvec3(1.f, 1.f, 1.f),  0.7f);
+    rt.addObject<Plane>(fvec3(0.f, 0.f, 22.f), fvec3(0.f, 0.f, -1.f), fvec3(1.f, 1.f, 1.f), 0.7f);
+    
 
     //rt.addObject<Plane>(fvec3(0.f, 0.f, 10.f), fvec3(0.f, 0.f, 1.f), fvec3(0.f, 0.f, 0.f), 1.f);
     //rt.addObject<Plane>(fvec3(-3.f, 0.f, 5.f), fvec3(1.f, 0.f, 0.2f), fvec3(), 1.f);
