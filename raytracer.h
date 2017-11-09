@@ -13,8 +13,8 @@ public:
     RayTracer();
     ~RayTracer();
 
-    template<typename T, typename...Args>
-    T* addObject(Args&& ...args);
+    template<typename T/*, typename...Args*/>
+    T* addObject(T* object/*Args&& ...args*/);
 
     template<typename...Args>
     bool addPointLight(Args&& ...args);
@@ -66,15 +66,15 @@ template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLi
 RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::RayTracer()
     : m_backgroundColour(0.f, 0.f, 0.f),
     m_minIntensityThreshold(0.001f),
-    m_maxRecursionDepth(40),
+    m_maxRecursionDepth(3),
     m_minRayLength(0.001)
 {
 }
 template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>
 RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::~RayTracer()
 {
-    for (auto o : m_objects)
-        delete o;
+    /*for (auto o : m_objects)
+        delete o;*/
 }
 
 template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>
@@ -178,10 +178,10 @@ fvec3 RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::castRay(Ray r
 }
 
 template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>
-template<typename T, typename ...Args>
-T * RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::addObject(Args&& ...args)
+template<typename T/*, typename ...Args*/>
+T * RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::addObject(T* object/*Args&& ...args*/)
 {
-    if (m_objects.add(new T(util::forward<Args>(args)...)))
+    if (m_objects.add(object/*new T(util::forward<Args>(args)...))*/))
     {
         return static_cast<T*>(m_objects.back());
     }

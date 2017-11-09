@@ -5,18 +5,43 @@
 #include "util.h"
 #include "vec.h"
 #include "reverse_sphere.h"
-#include <ctime>
+//#include <ctime>
+
+Sphere s1(fvec3(0.f, 0.f, 13.f), 2.f, fvec3(1.f, 1.f, 1.f), 0.7f);
+Sphere s2(fvec3(0.f, 3.f, 13.f), 1.f, fvec3(1.f, 0.f, 0.f), 0.7f);
+Sphere s3(fvec3(3.f, 2.f, 14.f), 2.f, fvec3(0.0f, 0.3f, 1.f), 0.7f);
+
+Plane p1(fvec3(12.f, 0.f, 0.f), fvec3(-1.f, 0.f, 0.f), fvec3(1.f, 1.f, 1.f), 0.1f);
+Plane p2(fvec3(-12.f, 0.f, 0.f), fvec3(1.f, 0.f, 0.f), fvec3(1.f, 1.f, 1.f), 0.1f);
+Plane p3(fvec3(0.f, 12.f, 0.f), fvec3(0.f, -1.f, 0.f), fvec3(1.f, 1.f, 1.f), 0.1f);
+Plane p4(fvec3(0.f, -12.f, 0.f), fvec3(0.f, 1.f, 0.f), fvec3(1.f, 1.f, 1.f), 0.1f);
+Plane p5(fvec3(0.f, 0.f, -2.f), fvec3(0.f, 0.f, 1.f), fvec3(1.f, 1.f, 1.f),  0.7f);
+Plane p6(fvec3(0.f, 0.f, 22.f), fvec3(0.f, 0.f, -1.f), fvec3(1.f, 1.f, 1.f), 0.7f);
+
+Application fw;
+RayTracer<10, 50, 10> rt;
 
 int main(int argc, char* argv[])
 {
-    Application fw;
-    RayTracer<10, 1000, 10> rt;
 
     util::debugPrint("Clearing");
     fw.clear({0.f, 0.f, 0.f});
 
     util::debugPrint("Creating objects");
-    rt.addObject<Sphere>(fvec3(0.f, 0.f, 13.f), 2.f, fvec3(1.f, 1.f, 1.f), 0.7f);
+
+    rt.addObject(&s1);
+    rt.addObject(&s2);
+    rt.addObject(&s3);
+
+    rt.addObject(&p1);
+    rt.addObject(&p2);
+    rt.addObject(&p3);
+    rt.addObject(&p4);
+    rt.addObject(&p5);
+    rt.addObject(&p6);
+
+
+    /*rt.addObject<Sphere>(fvec3(0.f, 0.f, 13.f), 2.f, fvec3(1.f, 1.f, 1.f), 0.7f);
     rt.addObject<Sphere>(fvec3(0.f, 3.f, 13.f), 1.f, fvec3(1.f, 0.f, 0.f), 0.7f);
     rt.addObject<Sphere>(fvec3(3.f, 2.f, 14.f), 2.f, fvec3(0.0f, 0.3f, 1.f), 0.7f);
 
@@ -27,8 +52,8 @@ int main(int argc, char* argv[])
     rt.addObject<Plane>(fvec3(0.f, 12.f, 0.f), fvec3(0.f, -1.f, 0.f), fvec3(1.f, 1.f, 1.f), 0.7f);
     rt.addObject<Plane>(fvec3(0.f, -12.f, 0.f), fvec3(0.f, 1.f, 0.f), fvec3(1.f, 1.f, 1.f), 0.7f);
     rt.addObject<Plane>(fvec3(0.f, 0.f, -2.f), fvec3(0.f, 0.f, 1.f), fvec3(1.f, 1.f, 1.f),  0.7f);
-    rt.addObject<Plane>(fvec3(0.f, 0.f, 22.f), fvec3(0.f, 0.f, -1.f), fvec3(1.f, 1.f, 1.f), 0.7f);
-    
+    rt.addObject<Plane>(fvec3(0.f, 0.f, 22.f), fvec3(0.f, 0.f, -1.f), fvec3(1.f, 1.f, 1.f), 0.7f);*/
+
 
     //rt.addObject<Plane>(fvec3(0.f, 0.f, 10.f), fvec3(0.f, 0.f, 1.f), fvec3(0.f, 0.f, 0.f), 1.f);
     //rt.addObject<Plane>(fvec3(-3.f, 0.f, 5.f), fvec3(1.f, 0.f, 0.2f), fvec3(), 1.f);
@@ -39,11 +64,11 @@ int main(int argc, char* argv[])
     //rt.addObject<Sphere>(fvec3(-3.f, 3.f, 18.f), 2.f, fvec3(0.f, 0.f, 1.f), 0.7f);
     //rt.addObject<Sphere>(fvec3(0.f, 0.f, 14.f), 1.f, fvec3(1.f, 1.f, 1.f), 0.3f);
 
-    srand(std::time(0));
-    for (int i = 0; i < 100; ++i)
+    //srand(std::time(0));
+    for (int i = 0; i < 50; ++i)
     {
         fvec3 pos(rand()%20-10, rand()%20-10, rand()%20);
-        rt.addPointLight(pos, 3.f, fvec3((rand()%100/100.f), (rand()%100/100.f), (rand()%100/100.f)));
+        rt.addPointLight(pos, 6.f, fvec3((rand()%100/100.f), (rand()%100/100.f), (rand()%100/100.f)));
     }
     //rt.setAmbientLight(fvec3(0.1f, 0.1f, 0.1f));
 
