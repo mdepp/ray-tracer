@@ -69,6 +69,13 @@ namespace util
         return base*base;
     }
 
+    template<typename T>
+    T pow5(T base)
+    {
+        return base*base*base*base*base;
+    }
+
+
     // http://en.cppreference.com/w/cpp/types/remove_reference
     template< class T > struct remove_reference { typedef T type; };
     template< class T > struct remove_reference<T&> { typedef T type; };

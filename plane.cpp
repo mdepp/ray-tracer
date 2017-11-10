@@ -3,12 +3,12 @@
 #include "util.h"
 #include "vec.h"
 
-Plane::Plane(fvec3 origin, fvec3 normal, fvec3 colour, float reflectionCoefficient)
-  : Object(),
+Plane::Plane(fvec3 origin, fvec3 normal, fvec3 colour, bool transparent, float refractiveIndex)
+    : Object(),
     m_origin(origin),
     m_normal(normalize(normal)),
     m_colour(colour),
-    m_reflectionCoefficient(reflectionCoefficient)
+    m_transparent(transparent), m_refractiveIndex(refractiveIndex)
 {
 
 }
@@ -27,9 +27,14 @@ float Plane::intersect(Ray ray, IntersectionData* intersectionData)
     if (distance > 0 && intersectionData)
     {
       intersectionData->intersection = ray.origin + ray.dir*distance;
-      intersectionData->colour = m_colour;
+      auto r = (int(intersectionData->intersection.x) % 2 + 2) % 2;
+      auto g = (int(intersectionData->intersection.y) % 2 + 2) % 2;
+      auto b = (int(intersectionData->intersection.z) % 2 + 2) % 2;
+
+      intersectionData->colour = fvec3(r, g, b);// m_colour;
       intersectionData->normal = m_normal;
-      intersectionData->reflectionCoefficient = m_reflectionCoefficient;
+      intersectionData->transparent = m_transparent;
+      intersectionData->refractiveIndex = m_refractiveIndex;
     }
     return distance;
 }

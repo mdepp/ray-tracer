@@ -7,7 +7,17 @@ struct IntersectionData
     fvec3 intersection;
     fvec3 colour;
     fvec3 normal;
-    float reflectionCoefficient;
+    /*
+     * Lighting calculations are split into two parts. First, diffuse lighting is calculated
+     * as in the Phong model, and the result is multiplied by the diffuse coefficient. Next,
+     * reflectivity is calculated by Schlick's approximation, which is used to create reflective
+     * and refractive rays (oriented by Snell's law), and the result is scaled by the one minus
+     * the diffuse constant (that is, the diffuse constant linearly interpolates results of each
+     * calculation).
+     */
+    //float diffuseCoefficient;
+    bool transparent;
+    float refractiveIndex;
 };
 
 class Object

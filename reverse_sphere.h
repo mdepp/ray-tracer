@@ -18,7 +18,7 @@ public:
     float intersect(Ray ray, IntersectionData* intersectionData)
     {
         auto distance = sphere.intersect(ray, intersectionData);
-        if (distance > 0.003 && intersectionData)
+        if (distance > 0 && intersectionData)
         {
             // Invert normals
             intersectionData->normal = -intersectionData->normal; 

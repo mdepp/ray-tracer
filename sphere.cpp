@@ -3,10 +3,11 @@
 #include "util.h"
 #include "vec.h"
 
-Sphere::Sphere(fvec3 center, float radius, fvec3 colour, float reflectionCoefficient)
+Sphere::Sphere(fvec3 center, float radius, fvec3 colour, bool transparent, float refractiveIndex)
     : Object(),
       m_center(center), m_radius(radius),
-      m_colour(colour), m_reflectionCoefficient(reflectionCoefficient)
+      m_colour(colour),
+    m_transparent(transparent), m_refractiveIndex(refractiveIndex)
 {
 }
 
@@ -28,7 +29,8 @@ float Sphere::intersect(Ray ray, IntersectionData* intersectionData)
                 intersectionData->intersection = ray.origin + ray.dir*term1;
                 intersectionData->colour = m_colour;
                 intersectionData->normal = normalize(intersectionData->intersection - m_center);
-                intersectionData->reflectionCoefficient = m_reflectionCoefficient;
+                intersectionData->transparent = m_transparent;
+                intersectionData->refractiveIndex = m_refractiveIndex;
             }
             return term1;
         }
@@ -57,7 +59,8 @@ float Sphere::intersect(Ray ray, IntersectionData* intersectionData)
                     intersectionData->intersection = ray.origin + ray.dir*maxLength;
                     intersectionData->colour = m_colour;
                     intersectionData->normal = normalize(intersectionData->intersection - m_center);
-                    intersectionData->reflectionCoefficient = m_reflectionCoefficient;
+                    intersectionData->transparent = m_transparent;
+                    intersectionData->refractiveIndex = m_refractiveIndex;
                 }
                 return maxLength;
             }
@@ -69,7 +72,8 @@ float Sphere::intersect(Ray ray, IntersectionData* intersectionData)
                 intersectionData->intersection = ray.origin + ray.dir*minLength;
                 intersectionData->colour = m_colour;
                 intersectionData->normal = normalize(intersectionData->intersection - m_center);
-                intersectionData->reflectionCoefficient = m_reflectionCoefficient;
+                intersectionData->transparent = m_transparent;
+                intersectionData->refractiveIndex = m_refractiveIndex;
             }
             return minLength;
         }

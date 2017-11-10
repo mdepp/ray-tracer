@@ -49,6 +49,17 @@ private:
      */
     Ray reflectRay(Ray ray, fvec3 normal);
 
+    /*
+    * Set 'refracted' to the direction of the refracted ray. Returns true if there is
+    * total internal reflection (in which case 'refracted' is not set.
+    */
+    bool refractRay(fvec3 dir, const IntersectionData& id, Ray& refracted);
+
+    /*
+     * Get specular reflectivity of intersection (by Schlick's approximation
+     */
+    float getReflectivity(fvec3 dir, const IntersectionData& id);
+
     fvec3 m_backgroundColour;
     const float m_minIntensityThreshold;
     const uint16_t m_maxRecursionDepth;
@@ -66,7 +77,7 @@ template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLi
 RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::RayTracer()
     : m_backgroundColour(0.f, 0.f, 0.f),
     m_minIntensityThreshold(0.001f),
-    m_maxRecursionDepth(3),
+    m_maxRecursionDepth(50),
     m_minRayLength(0.001)
 {
 }
@@ -100,10 +111,59 @@ template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLi
 Ray RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::reflectRay(Ray ray, fvec3 normal)
 {
     //if (dot(ray.dir, normal) < 0)
-        return { ray.origin, -reflectNormalized(ray.dir, normal) };
+    return { ray.origin, -reflectNormalized(ray.dir, normal) };
     //else
     //    return { ray.origin, -reflectNormalized(ray.dir, -normal) };
 }
+
+/*
+ * Set 'refracted' to the direction of the refracted ray. Returns true if there is
+ * total internal reflection (in which case 'refracted' is not set.
+ */
+template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>
+bool RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::refractRay(fvec3 dir, const IntersectionData& id, Ray& refracted)
+{
+    // Assume object has air boundary
+    auto normal = id.normal;
+    auto c = -dot(normal, dir);
+    auto r = (c > 0) ? 1.f / id.refractiveIndex : id.refractiveIndex; // Going from air->object or object->air
+    //auto r = 1.f / id.refractiveIndex;
+    if (c < 0)
+    {
+        refracted.origin = id.intersection;
+        refracted.dir = dir;
+        return false;
+        c = -c; // c should be positive
+        normal = -id.normal;
+    }
+
+    auto radicand = 1.f - util::pow2(r)*(1.f - util::pow2(c));
+    if (radicand < 0) return true; // total internal reflection
+
+    refracted = { id.intersection, dir*r + normal*(r*c - sqrt(radicand)) };
+    return false;
+}
+
+template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>
+float RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::getReflectivity(fvec3 dir, const IntersectionData & id)
+{
+    float n1=1, n2=id.refractiveIndex;
+    auto cosTheta = dot(-id.normal, dir);
+    if (cosTheta < 0) // entering object from air
+    {
+        n1 = 1.f;
+        n2 = id.refractiveIndex;
+    }
+    else
+    {
+        n2 = 1.f;
+        n1 = id.refractiveIndex;
+    }
+
+    auto R_0 = util::pow2((n1 - n2) / (n1 + n2));
+    return R_0 + (1.f - R_0)*util::pow5(1.f - cosTheta);
+}
+
 
 template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>
 bool RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::render(WindowFramework * fw)
@@ -169,12 +229,40 @@ fvec3 RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::castRay(Ray r
         util::debugPrint("castRay() could not find an intersection for supposedly intersecting object.");
     // Calculate next ray and cast it
     auto reflectedRay = reflectRay({ id.intersection, ray.dir }, id.normal); // Ray(id.intersection, -reflectNormalized(ray.dir, id.normal));
-    auto reflectedIntensity = intensity*id.reflectionCoefficient;
+    //auto reflectedIntensity = intensity*(1.f-id.diffuseCoefficient);
 
-    auto lighting = getLighting(id.intersection, id.normal);
+    Ray refractedRay = ray;
+    bool totalInternalReflection = refractRay(ray.dir, id, refractedRay);
 
-    return lighting * id.colour*(1.f - id.reflectionCoefficient)
-        + castRay(reflectedRay, reflectedIntensity, recursionDepth + 1)*id.reflectionCoefficient;
+    //bool doRefraction = !totalInternalReflection && id.transparent;
+
+    auto reflectivity = getReflectivity(ray.dir, id);
+
+    auto diffuseLighting = getLighting(id.intersection, id.normal);
+
+    if (!id.transparent)
+    {
+        if (totalInternalReflection) reflectivity = 1.f;
+        return diffuseLighting*id.colour*(1.f-reflectivity) // refracted light is absorbed by opaque materials
+            + castRay(reflectedRay, intensity*reflectivity, recursionDepth + 1)*reflectivity;
+    }
+    else if (totalInternalReflection)
+    {
+        return castRay(reflectedRay, intensity, recursionDepth+1); // entire ray is reflected
+    }
+    else
+    {
+        //refractedRay.dir = ray.dir;
+        //return { reflectivity, reflectivity, reflectivity };
+        //return (refractedRay.dir+fvec3(1.f, 1.f, 1.f)) * 0.5f;
+        if (dot(ray.dir, id.normal) > 0) reflectivity = 0.f;
+        return castRay(reflectedRay, intensity*reflectivity, recursionDepth + 1)*reflectivity // some is reflected
+            + castRay(refractedRay, intensity*(1.f - reflectivity), recursionDepth + 1)*(1.f-reflectivity); // and some refracted
+    }
+
+
+    /*return diffuseLighting * id.colour*id.diffuseCoefficient
+        + castRay(reflectedRay, reflectedIntensity, recursionDepth + 1)*(1.f-id.diffuseCoefficient);*/
 }
 
 template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>
