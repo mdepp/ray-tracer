@@ -34,6 +34,10 @@ private:
     */
     Object* getFirstIntersection(Ray ray);
     /*
+    * Returns true if the given line segment intersects with an object
+    */
+    bool segmentIntersects(Ray ray, float length);
+    /*
     * Cast a ray and recursively trace its path. Returns the colour "seen"
     * with the ray.
     */
@@ -66,7 +70,7 @@ template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLi
 RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::RayTracer()
     : m_backgroundColour(0.f, 0.f, 0.f),
     m_minIntensityThreshold(0.001f),
-    m_maxRecursionDepth(3),
+    m_maxRecursionDepth(9),
     m_minRayLength(0.001)
 {
 }
@@ -85,7 +89,12 @@ fvec3 RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::getLighting(f
     for (auto& light : m_pointLights)
     {
         auto diff = light.position - point;
-        total += light.colour * util::max(dot(normal, normalize(diff)), 0.f) * util::min(light.intensity / diff.length2(), 1.f);
+        auto dir = normalize(diff);
+        if (!segmentIntersects(Ray(light.position, dir), diff.length()))
+        {   
+            normal += fvec3((rand()%2-1)/100.f, (rand()%2-1)/100.f, (rand()%2-1)/100.f);
+            total += light.colour * util::max(dot(normal, dir), 0.f) * util::min(light.intensity / diff.length2(), 1.f);
+        }
     }
     for (auto& light : m_directionalLights)
     {
@@ -125,6 +134,23 @@ bool RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::render(WindowF
         }
     }
     return true;
+}
+
+template <uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>
+bool RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::segmentIntersects(Ray ray, float length)
+{
+    for (auto object : m_objects)
+    {
+        if (object)
+        {
+            auto distance = object->intersect(ray, nullptr);
+            if (distance >= m_minRayLength && distance <= length)
+            {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>
@@ -171,6 +197,7 @@ fvec3 RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::castRay(Ray r
     auto reflectedRay = reflectRay({ id.intersection, ray.dir }, id.normal); // Ray(id.intersection, -reflectNormalized(ray.dir, id.normal));
     auto reflectedIntensity = intensity*id.reflectionCoefficient;
 
+    //util::debugPrint(id.normal.x, ", ", id.normal.y, ", ", id.normal.z);
     auto lighting = getLighting(id.intersection, id.normal);
 
     return lighting * id.colour*(1.f - id.reflectionCoefficient)
