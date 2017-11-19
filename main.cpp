@@ -7,16 +7,16 @@
 #include "reverse_sphere.h"
 #include <ctime>
 
-Sphere s1(fvec3(0.f, 0.f, 13.f), 2.f, fvec3(1.f, 1.f, 1.f), true, 1.009f);
-Sphere s2(fvec3(0.f, 3.f, 13.f), 1.f, fvec3(1.f, 0.f, 0.f), true, 9.f);
-Sphere s3(fvec3(3.f, 2.f, 15.f), 2.f, fvec3(0.0f, 0.3f, 1.f), true, 1.09f);
+Sphere s1(fvec3(0.f, 0.f, 13.f), 2.f, fvec3(1.f, 1.f, 1.f), true, 1.01f);
+Sphere s2(fvec3(0.f, 3.f, 13.f), 1.f, fvec3(1.f, 0.f, 0.f), false, 1.5f);
+Sphere s3(fvec3(3.f, 2.f, 15.f), 2.f, fvec3(0.0f, 0.3f, 1.f), false, 1.009f);
 
 Plane p1(fvec3(12.f, 0.f, 0.f), fvec3(-1.f, 0.f, 0.f), fvec3(1.f, 1.f, 1.f), false, 1);
 Plane p2(fvec3(-12.f, 0.f, 0.f), fvec3(1.f, 0.f, 0.f), fvec3(1.f, 1.f, 1.f), false, 1);
 Plane p3(fvec3(0.f, 12.f, 0.f), fvec3(0.f, -1.f, 0.f), fvec3(1.f, 1.f, 1.f), false, 1);
 Plane p4(fvec3(0.f, -12.f, 0.f), fvec3(0.f, 1.f, 0.f), fvec3(1.f, 1.f, 1.f), false, 1);
-Plane p5(fvec3(0.f, 0.f, -2.f), fvec3(0.f, 0.f, 1.f), fvec3(1.f, 1.f, 1.f),  false, 1);
-Plane p6(fvec3(0.f, 0.f, 22.f), fvec3(0.f, 0.f, -1.f), fvec3(1.f, 1.f, 1.f), false, 1);
+Plane p5(fvec3(0.f, 0.f, -2.f), fvec3(0.f, 0.f, 1.f), fvec3(1.f, 1.f, 1.f),  false, 10);
+Plane p6(fvec3(0.f, 0.f, 22.f), fvec3(0.f, 0.f, -1.f), fvec3(1.f, 1.f, 1.f), false, 10);
 
 ReverseSphere rs(fvec3(0.f, 0.f, 15.f), 15.f, fvec3(1.f, 1.f, 1.f), false, 1.f);
 

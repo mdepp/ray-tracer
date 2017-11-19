@@ -31,7 +31,7 @@ float Plane::intersect(Ray ray, IntersectionData* intersectionData)
       auto g = (int(intersectionData->intersection.y) % 2 + 2) % 2;
       auto b = (int(intersectionData->intersection.z) % 2 + 2) % 2;
 
-      intersectionData->colour = fvec3(r, g, b);// m_colour;
+      intersectionData->colour = /*fvec3(r, g, b);*/m_colour;
       intersectionData->normal = m_normal;
       intersectionData->transparent = m_transparent;
       intersectionData->refractiveIndex = m_refractiveIndex;

@@ -255,6 +255,7 @@ fvec3 RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::castRay(Ray r
         //refractedRay.dir = ray.dir;
         //return { reflectivity, reflectivity, reflectivity };
         //return (refractedRay.dir+fvec3(1.f, 1.f, 1.f)) * 0.5f;
+        //reflectivity = 0;// += 0.2f;
         if (dot(ray.dir, id.normal) > 0) reflectivity = 0.f;
         return castRay(reflectedRay, intensity*reflectivity, recursionDepth + 1)*reflectivity // some is reflected
             + castRay(refractedRay, intensity*(1.f - reflectivity), recursionDepth + 1)*(1.f-reflectivity); // and some refracted
