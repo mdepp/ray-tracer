@@ -15,7 +15,6 @@ Plane::Plane(fvec3 origin, fvec3 normal, fvec3 colour, float reflectionCoefficie
 float Plane::intersect(Ray ray, IntersectionData* intersectionData)
 {
     // https://en.wikipedia.org/wiki/Line%E2%80%93plane_intersection
-    const float epsilon = 0.003;
     auto dotProduct = dot(m_normal, ray.dir);
     if (util::abs(dotProduct) == 0) // Ray is parallel to plane
     {

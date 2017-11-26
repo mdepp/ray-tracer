@@ -139,6 +139,7 @@ bool RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::render(WindowF
 template <uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>
 bool RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::segmentIntersects(Ray ray, float length)
 {
+    return false;
     for (auto object : m_objects)
     {
         if (object)

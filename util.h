@@ -8,7 +8,7 @@
 #undef max
 namespace util
 {
-    template <typename S, typename T>
+    /*template <typename S, typename T>
     auto max(S&& a, T&& b)
     {
         return a < b ? b : a;
@@ -23,8 +23,15 @@ namespace util
     {
         return n < 0 ? -n : n;
     }
-
+*/
     template<typename T>
+    T max(T a, T b) {return a < b ? b : a;}
+    template<typename T>
+    T min(T a, T b) {return a < b ? a : b;}
+    template<typename T>
+    T abs(T n) {return n < 0 ? -n : n;}
+    template<typename T>
+    
     void debugPrint(T&& val)
     {
         Serial.println(val);
@@ -35,6 +42,7 @@ namespace util
         Serial.print(first);
         debugPrint(args...);
     }
+    
 }
 #else
 #include <algorithm>
