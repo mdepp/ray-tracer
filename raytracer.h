@@ -6,6 +6,18 @@
 #include "util.h"
 #include "vec.h"
 
+
+#include <cassert>
+
+// Since can't return tuples properly without C++17 and the standard library
+struct RefractionData
+{
+    RefractionData(Ray r, bool t)
+        : ray(r), tir(t) {}
+    Ray ray;
+    bool tir; // total internal reflection
+};
+
 template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>
 class RayTracer
 {
@@ -41,7 +53,7 @@ private:
     * Cast a ray and recursively trace its path. Returns the colour "seen"
     * with the ray.
     */
-    fvec3 castRay(Ray ray, float intensity, uint16_t recursionDepth);
+    fvec3 castRay(Ray ray, float intensity, uint16_t recursionDepth, bool isRefractive=false);
 
     /*
     * Get colour contributed by lights given a point and normal
@@ -70,7 +82,7 @@ template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLi
 RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::RayTracer()
     : m_backgroundColour(0.f, 0.f, 0.f),
     m_minIntensityThreshold(0.001f),
-    m_maxRecursionDepth(9),
+    m_maxRecursionDepth(90),
     m_minRayLength(0.001)
 {
 }
@@ -92,7 +104,7 @@ fvec3 RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::getLighting(f
         auto dir = normalize(diff);
         if (!segmentIntersects(Ray(light.position, dir), diff.length()))
         {   
-            normal += fvec3((rand()%2-1)/100.f, (rand()%2-1)/100.f, (rand()%2-1)/100.f);
+            //normal += fvec3((rand()%2-1)/100.f, (rand()%2-1)/100.f, (rand()%2-1)/100.f);
             total += light.colour * util::max(dot(normal, dir), 0.f) * util::min(light.intensity / diff.length2(), 1.f);
         }
     }
@@ -108,10 +120,10 @@ fvec3 RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::getLighting(f
 template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>
 Ray RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::reflectRay(Ray ray, fvec3 normal)
 {
-    //if (dot(ray.dir, normal) < 0)
+    if (dot(ray.dir, normal) < 0)
         return { ray.origin, -reflectNormalized(ray.dir, normal) };
-    //else
-    //    return { ray.origin, -reflectNormalized(ray.dir, -normal) };
+    else
+        return { ray.origin, -reflectNormalized(ray.dir, -normal) };
 }
 
 template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>
@@ -139,6 +151,7 @@ bool RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::render(WindowF
 template <uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>
 bool RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::segmentIntersects(Ray ray, float length)
 {
+    return false;
     for (auto object : m_objects)
     {
         if (object)
@@ -178,10 +191,10 @@ Object * RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::getFirstIn
 }
 
 template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>
-fvec3 RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::castRay(Ray ray, float intensity, uint16_t recursionDepth)
+fvec3 RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::castRay(Ray ray, float intensity, uint16_t recursionDepth, bool isRefractive)
 {
     if (intensity < m_minIntensityThreshold || recursionDepth > m_maxRecursionDepth) // Base case
-        return m_ambientLight.colour;
+        return { 0.f, 1.f, 0.f };// m_ambientLight.colour;
 
     // Get the first object that intersects this ray
     auto intersectingObject = getFirstIntersection(ray);
@@ -189,19 +202,117 @@ fvec3 RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::castRay(Ray r
     if (!intersectingObject)
         return m_ambientLight.colour; // Stop if no intersection took place
 
-                                   // Get detailed information of the intersection
+    // Get detailed information of the intersection
     IntersectionData id;
     if (intersectingObject->intersect(ray, &id) < 0)
         util::debugPrint("castRay() could not find an intersection for supposedly intersecting object.");
+    // HACK -- manually sets refractive index (change this)
+    id.refractiveIndex = 1.1f;
+    
     // Calculate next ray and cast it
     auto reflectedRay = reflectRay({ id.intersection, ray.dir }, id.normal); // Ray(id.intersection, -reflectNormalized(ray.dir, id.normal));
-    auto reflectedIntensity = intensity*id.reflectionCoefficient;
+    auto reflectionCoefficient = id.reflectionCoefficient;
+
+    auto refractRay = [this](Ray ray, fvec3 normal, float refractiveIndex) -> RefractionData
+    {/*
+        auto v_dot_n = dot(ray.dir, normal);
+        if (v_dot_n == 0) // Parallel to surface, so no refraction
+        {
+            return { ray, false };
+        }
+        else if (v_dot_n > 0) // Take into account ray leaving object
+        {
+            v_dot_n = -v_dot_n;
+            normal = -normal;
+            refractiveIndex = 1.f / refractiveIndex;
+        }
+
+        auto v_prime = -ray.dir/v_dot_n; // V' = V/|V.N|
+        auto radicand = util::pow2(refractiveIndex)*v_prime.length2() - (v_prime + normal).length2(); // k_n^2 |V'|^2 - |V'+N|^2
+        radicand = util::abs(radicand);
+        if (radicand <= 0) // Total internal reflection
+        {
+            return { reflectRay(ray, normal), true };
+        }
+        auto k_f = 1.f / sqrt(radicand); // (k_n^2 |V'|^2 - |V'+N|^2)^(-1/2)
+
+        auto refractedRay = Ray(ray.origin, normalize((normal+v_prime)*k_f - normal)); // k_f (N+V') - N
+        return { refractedRay, false };*/
+        /*
+        // Assume object has air boundary
+        auto c = -dot(normal, ray.dir);
+        auto r = (c > 0) ? 1.f / refractiveIndex : refractiveIndex; // Going from air->object or object->air
+                                                                          //auto r = 1.f / id.refractiveIndex;
+        if (c < 0)
+        {
+            return { ray, false };
+            c = -c; // c should be positive
+            normal = -normal;
+        }
+
+        auto radicand = 1.f - util::pow2(r)*(1.f - util::pow2(c));
+        if (radicand < 0) return { ray, true }; // total internal reflection
+
+        return { { ray.origin, ray.dir*r + normal*(r*c - sqrt(radicand)) }, false };*/
+
+        assert(util::abs(ray.dir.length2()-1.f) < 0.01);
+        assert(util::abs(normal.length2()-1.f) < 0.01);
+
+        if (dot(normal, ray.dir) > 0)
+        {
+            normal = -normal;
+            refractiveIndex = 1.f / refractiveIndex;
+        }
+
+        auto term1 = (cross(normal, cross(-normal, ray.dir)))*(1.f / refractiveIndex);
+        auto radicand = 1.f - util::pow2(1.f / refractiveIndex)*dot(cross(normal, ray.dir), cross(normal, ray.dir));
+        if (radicand > 0)
+        {
+            auto term2 = -normal*sqrt(radicand);
+            return { {ray.origin, normalize(term1 + term2)}, false };
+        }
+        else //tir
+        {
+            return { ray, false };
+        }
+    };
+
+
+
+    auto refractionData = refractRay({ id.intersection, ray.dir }, id.normal, id.refractiveIndex);
+    
+    // =========================================================
+    if (isRefractive)
+    {
+        refractionData.ray = { id.intersection, ray.dir };
+        return castRay(refractionData.ray, intensity, recursionDepth + 1, false);
+    }
+    // ========================================================
+    
+    auto transmissionCoefficient = id.transmissionCoefficient;
+    //refractionData.tir = true;
+    if (refractionData.tir) // total internal reflection
+    {
+        reflectionCoefficient += transmissionCoefficient;
+        transmissionCoefficient = 0.f;
+    }
+
+    auto diffuseCoefficient = (1.f - reflectionCoefficient - transmissionCoefficient);
+    if (diffuseCoefficient < 0)
+    {
+        util::debugPrint("In castRay(), diffuse coefficient of light is negative: ", diffuseCoefficient);
+    }
 
     //util::debugPrint(id.normal.x, ", ", id.normal.y, ", ", id.normal.z);
     auto lighting = getLighting(id.intersection, id.normal);
-
-    return lighting * id.colour*(1.f - id.reflectionCoefficient)
-        + castRay(reflectedRay, reflectedIntensity, recursionDepth + 1)*id.reflectionCoefficient;
+    
+    refractionData.ray = { id.intersection, ray.dir };
+    if (transmissionCoefficient > 0 && !refractionData.tir)
+        return castRay(refractionData.ray, intensity, recursionDepth + 1, false);
+    else if (transmissionCoefficient > 0 && refractionData.tir)
+        return castRay(reflectedRay, intensity, recursionDepth + 1);
+    else
+        return castRay(reflectedRay, reflectionCoefficient*intensity, recursionDepth + 1)*reflectionCoefficient + lighting*id.colour*diffuseCoefficient;
 }
 
 template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>

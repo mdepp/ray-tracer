@@ -32,13 +32,13 @@ public:
     }
 
     bool operator == (const vec2<T>& other) const
-	{
-		return x == other.x && y == other.y;
-	}
-	bool operator != (const vec2<T>& other) const
-	{
-		return x != other.x || y != other.y;
-	}
+    {
+        return x == other.x && y == other.y;
+    }
+    bool operator != (const vec2<T>& other) const
+    {
+        return x != other.x || y != other.y;
+    }
     vec2<T> operator / (T n) const
     {
         return vec2<T>(x / n, y / n);
@@ -47,14 +47,14 @@ public:
     {
         return vec2<T>(x * n, y * n);
     }
-	vec2<T> operator - (const vec2<T>& other) const
-	{
-		return vec2<T>(x - other.x, y - other.y);
-	}
-	vec2<T> operator + (const vec2<T>& other) const
-	{
-		return vec2<T>(x + other.x, y + other.y);
-	}
+    vec2<T> operator - (const vec2<T>& other) const
+    {
+        return vec2<T>(x - other.x, y - other.y);
+    }
+    vec2<T> operator + (const vec2<T>& other) const
+    {
+        return vec2<T>(x + other.x, y + other.y);
+    }
     vec2<T> operator-() const noexcept
     {
         return vec2<T>(-x, -y);
@@ -89,7 +89,7 @@ public:
 
     T length2() const noexcept
     {
-        return x*x + y*y + z*z;
+        return dot(*this, *this);
     }
     T length() const noexcept
     {
@@ -97,29 +97,29 @@ public:
     }
 
     bool operator == (const vec3<T>& other) const noexcept
-	{
-		return x == other.x && y == other.y && z == other.z;
-	}
-	bool operator != (const vec3<T>& other) const noexcept
-	{
-		return x != other.x || y != other.y || z != other.z;
-	}
-	vec3<T> operator / (T n) const noexcept
-	{
-		return vec3<T>(x / n, y / n, z / n);
-	}
+    {
+        return x == other.x && y == other.y && z == other.z;
+    }
+    bool operator != (const vec3<T>& other) const noexcept
+    {
+        return x != other.x || y != other.y || z != other.z;
+    }
+    vec3<T> operator / (T n) const noexcept
+    {
+        return vec3<T>(x / n, y / n, z / n);
+    }
     vec3<T> operator * (T n) const noexcept
     {
         return vec3<T>(x * n, y * n, z * n);
     }
-	vec3<T> operator - (const vec3<T>& other) const noexcept
-	{
-		return vec3<T>(x - other.x, y - other.y, z - other.z);
-	}
-	vec3<T> operator + (const vec3<T>& other) const noexcept
-	{
-		return vec3<T>(x + other.x, y + other.y, z + other.z);
-	}
+    vec3<T> operator - (const vec3<T>& other) const noexcept
+    {
+        return vec3<T>(x - other.x, y - other.y, z - other.z);
+    }
+    vec3<T> operator + (const vec3<T>& other) const noexcept
+    {
+        return vec3<T>(x + other.x, y + other.y, z + other.z);
+    }
     vec3<T> operator-() const noexcept
     {
         return vec3<T>(-x, -y, -z);
@@ -184,6 +184,14 @@ template<typename T>
 vec3<T> reflectNormalized(const vec3<T>& v, const vec3<T>& axis)
 {
     return axis*dot(v, axis)*2 - v;
+}
+
+template<typename T>
+vec3<T> cross(const vec3<T>& u, const vec3<T>& v)
+{
+    return { u.y*v.z - u.z*v.y,
+             u.z*v.x - u.x*v.z,
+             u.x*v.y - u.y*v.x };
 }
 
 using fvec2 = vec2<float>;

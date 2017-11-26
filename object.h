@@ -2,12 +2,18 @@
 #include "ray.h"
 #include "vec.h"
 
+/*
+ * Stores all data of a single ray-object intersection. 'reflectionCoefficient' is the fraction of incoming light that is reflected from
+ * the object (specular light), 'transmissionCoefficient' is the fraction of light that is refracted through the object
+ */
 struct IntersectionData
 {
     fvec3 intersection;
     fvec3 colour;
     fvec3 normal;
     float reflectionCoefficient;
+    float transmissionCoefficient;
+    float refractiveIndex;
 };
 
 class Object
