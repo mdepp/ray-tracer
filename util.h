@@ -1,5 +1,8 @@
 #pragma once
 
+/*
+ * There's a bit of a problem here since randomSeed duplicates an Arduino function name.
+ */
 
 #ifdef ARDUINO_BUILD
 #include <Arduino.h>
@@ -31,7 +34,7 @@ namespace util
     template<typename T>
     T abs(T n) {return n < 0 ? -n : n;}
     template<typename T>
-    
+
     void debugPrint(T&& val)
     {
         Serial.println(val);
@@ -42,13 +45,39 @@ namespace util
         Serial.print(first);
         debugPrint(args...);
     }
-    
+    // Generate a random integer in the range [0, max)
+    int32_t random(int32_t max);
+
+    template<typename T, int Size>
+    T getSeed(int pin, int delay_time)
+    {
+      T val = 0;
+      for(int i = 0; i < Size; ++i)
+      {
+          // Get the least significant bit of the random input
+          T random_digit = analogRead(pin) & 1;
+          // Set this as the i'th bit of val
+          val += random_digit << i;
+          // Delay a bit for input value to change
+          delay(delay_time);
+      }
+      return val;
+    }
+
+    // Seed random number generator nondeterministically
+    void randomSeed();
+
+    uint8_t* getStackPointer();
+    // https://github.com/esp8266/Arduino/issues/81
+    uint32_t getAvailableMemory();
 }
 #else
 #include <algorithm>
+#include <iostream>
 #include <cmath>
 #include <cstdint>
-#include <iostream>
+#include <cstdlib>
+#include <ctime>
 namespace util
 {
     using std::abs;
@@ -66,6 +95,15 @@ namespace util
         std::cout << first;
         debugPrint(std::forward<Args>(args)...);
     }
+
+    // Generate a random integer in the range [0, max)
+    int32_t random(int32_t maxval);
+    // Seed random number generator nondeterministically
+    void randomSeed();
+
+    uint8_t* getStackPointer();
+    // https://github.com/esp8266/Arduino/issues/81
+    uint32_t getAvailableMemory();
 }
 #endif
 

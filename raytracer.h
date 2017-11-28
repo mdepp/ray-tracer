@@ -70,7 +70,7 @@ template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLi
 RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::RayTracer()
     : m_backgroundColour(0.f, 0.f, 0.f),
     m_minIntensityThreshold(0.001f),
-    m_maxRecursionDepth(9),
+    m_maxRecursionDepth(90),
     m_minRayLength(0.001)
 {
 }
@@ -91,8 +91,8 @@ fvec3 RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::getLighting(f
         auto diff = light.position - point;
         auto dir = normalize(diff);
         if (!segmentIntersects(Ray(light.position, dir), diff.length()))
-        {   
-            normal += fvec3((rand()%2-1)/100.f, (rand()%2-1)/100.f, (rand()%2-1)/100.f);
+        {
+            //normal += fvec3((rand()%2-1)/100.f, (rand()%2-1)/100.f, (rand()%2-1)/100.f);
             total += light.colour * util::max(dot(normal, dir), 0.f) * util::min(light.intensity / diff.length2(), 1.f);
         }
     }
