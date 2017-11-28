@@ -29,16 +29,16 @@ int main(int argc, char* argv[])
 
     util::debugPrint("Creating objects");
 
-    //rt.addObject(&s1);
+    rt.addObject(&s1);
     rt.addObject(&s2);
     rt.addObject(&s3);
 
     rt.addObject(&p1);
     rt.addObject(&p2);
-    //rt.addObject(&p3);
-    //rt.addObject(&p4);
+    rt.addObject(&p3);
+    rt.addObject(&p4);
     //rt.addObject(&p5);
-    //rt.addObject(&p6);
+    rt.addObject(&p6);
 
 
     /*rt.addObject<Sphere>(fvec3(0.f, 0.f, 13.f), 2.f, fvec3(1.f, 1.f, 1.f), 0.7f);

@@ -26,6 +26,8 @@ try:
                     if high:
                         file.write(high)
                         break
+
+        file.flush()
                 
 
     print('Finished.')
