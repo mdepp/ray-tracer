@@ -18,7 +18,7 @@ Plane p5(fvec3(0.f, 0.f, -2.f), fvec3(0.f, 0.f, 1.f), fvec3(1.f, 1.f, 1.f),  1.f
 Plane p6(fvec3(0.f, 0.f, 22.f), fvec3(0.f, 0.f, -1.f), fvec3(1.f, 1.f, 1.f), 1.f);
 
 Application fw;
-RayTracer<10, 15, 10> rt;
+RayTracer<10, 15, 10> rt(10);
 
 int main(int argc, char* argv[])
 {
