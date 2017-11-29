@@ -19,7 +19,7 @@ namespace util
     }
 		uint32_t getAvailableMemory()
     {
-        static uint8_t* stackptr, heapptr;
+        static uint8_t* stackptr, *heapptr;
         stackptr = (uint8_t *)malloc(4); // use stackptr temporarily
         heapptr = stackptr; // save value of heap pointer
         free(stackptr); // free up the memory again (sets stackptr to 0)

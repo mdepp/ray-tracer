@@ -11,7 +11,7 @@ template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLi
 class RayTracer
 {
 public:
-    RayTracer();
+    RayTracer(int);
     ~RayTracer();
 
     template<typename T/*, typename...Args*/>
@@ -68,10 +68,10 @@ private:
 };
 
 template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>
-RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::RayTracer()
+RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::RayTracer(int maxRecursionDepth)
     : m_backgroundColour(0.f, 0.f, 0.f),
     m_minIntensityThreshold(0.001f),
-    m_maxRecursionDepth(90),
+    m_maxRecursionDepth(maxRecursionDepth),
     m_minRayLength(0.001)
 {
 }
