@@ -47,7 +47,7 @@ public:
     }
 	vec4<T> operator - (const vec4<T>& other) const
 	{
-        return vec2<T>(x - other.x, y - other.y, z - other.z, w - other.w);
+        return vec4<T>(x - other.x, y - other.y, z - other.z, w - other.w);
 	}
 	vec4<T> operator + (const vec4<T>& other) const
 	{
