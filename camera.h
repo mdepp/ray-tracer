@@ -42,9 +42,9 @@ public:
         fvec3 dirToPixel{ x, y, m_viewportDepth };
         return { m_pos.transform({0, 0, 0}), /*reflectNormalized*/(normalize(m_dir*dirToPixel)) };
     }
-
-    auto nPixelsX() const noexcept { return m_nPixelsX; }
-    auto nPixelsY() const noexcept { return m_nPixelsY; }
+    
+    int nPixelsX() const noexcept { return m_nPixelsX; }
+    int nPixelsY() const noexcept { return m_nPixelsY; }
 
 private:
     int m_nPixelsX, m_nPixelsY;

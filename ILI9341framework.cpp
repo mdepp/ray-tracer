@@ -34,7 +34,7 @@ void ILI9341Framework::drawPixel(uint16_t x, uint16_t y, fvec3 colour)
     uint16_t encoded = encodeColour(colour);
     if (m_backgroundColour != colour)
     {
-        m_tft.drawPixel(x, m_width-1-y, encodeColour(colour));
+        m_tft.drawPixel(x, m_height-1-y, encodeColour(colour));
     }
     Serial.write((char)2);
     Serial.write(lowByte(encoded));
