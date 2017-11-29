@@ -12,7 +12,7 @@ uint16_t encodeColour(float fr, float fg, float fb)
     return (r << 11) + (g << 5) + b;
 }
 
-const uint32_t BUFFER_SIZE = 32;
+const uint32_t BUFFER_SIZE = 60;
 
 int main()
 {
@@ -34,8 +34,8 @@ int main()
         }
         for(uint32_t k=0; k<BUFFER_SIZE/2; ++k)
         {
-            uint32_t x = (i+k)/IMAGE_HEIGHT;
-            uint32_t y = (i+k)%IMAGE_HEIGHT;
+            uint32_t x = (i+k+BUFFER_SIZE/2)/IMAGE_HEIGHT; // Why adding BUFFER_SIZE/2 ? Something wrong with save_image?
+            uint32_t y = (i+k+BUFFER_SIZE/2)%IMAGE_HEIGHT;
             uint32_t low = Serial.read();
             uint32_t high = Serial.read();
             

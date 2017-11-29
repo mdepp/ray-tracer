@@ -6,7 +6,7 @@ import time
 IMAGE_WIDTH = 320
 IMAGE_HEIGHT = 240
 
-BUFFER_SIZE = 32
+BUFFER_SIZE = 60
 
 try:
     port_name = sys.argv[1] if len(sys.argv) > 1 else 'COM3'
