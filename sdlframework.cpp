@@ -123,7 +123,7 @@ void SDLFramework::drawPixel(uint16_t x, uint16_t y, fvec3 colour)
     int r = util::min(colour.r * 0xFF, 255.f);
     int g = util::min(colour.g * 0xFF, 255.f);
     int b = util::min(colour.b * 0xFF, 255.f);
-    *(m_backBufferPixels+x + y*m_width) = 0xFF000000 | (r<<16) | (g<<8) | b;
+    *(m_backBufferPixels+x + (m_height-1-y)*m_width) = 0xFF000000 | (r<<16) | (g<<8) | b;
 }
 
 uint16_t SDLFramework::width()

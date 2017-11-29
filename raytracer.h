@@ -5,6 +5,7 @@
 #include "windowframework.h"
 #include "util.h"
 #include "vec.h"
+#include "camera.h"
 
 template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>
 class RayTracer
@@ -25,7 +26,7 @@ public:
     template<typename...Args>
     void setAmbientLight(Args&& ...args);
 
-    bool render(WindowFramework* fw);
+    bool render(WindowFramework* fw, Camera* cam);
 private:
 
     /*
@@ -115,20 +116,13 @@ Ray RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::reflectRay(Ray 
 }
 
 template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>
-bool RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::render(WindowFramework * fw)
+bool RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::render(WindowFramework* fw, Camera* cam)
 {
-    const float viewportWidth = 10.f;
-    const float viewportHeight = viewportWidth / float(fw->width())*fw->height();
-    const float viewportDepth = 10.f;
-
-    for (decltype(fw->width()) pixelX = 0; pixelX < fw->width(); ++pixelX)
+    for (decltype(cam->nPixelsX()) pixelX = 0; pixelX < cam->nPixelsX(); ++pixelX)
     {
-        for (decltype(fw->height()) pixelY = 0; pixelY < fw->height(); ++pixelY)
+        for (decltype(cam->nPixelsY()) pixelY = 0; pixelY < cam->nPixelsY(); ++pixelY)
         {
-            float x = ((int16_t)pixelX - (int16_t)fw->width() / 2)*viewportWidth / fw->width();
-            float y = ((int16_t)pixelY - (int16_t)fw->height() / 2)*viewportHeight / fw->height();
-
-            Ray ray({ 0, 0, 0 }, normalize(fvec3(x, y, viewportDepth)));
+            Ray ray = cam->getPixelRay(pixelX, pixelY);
             fw->drawPixel(pixelX, pixelY, castRay(ray, 1.f, 1));
             if (!fw->tick()) return false;
         }
