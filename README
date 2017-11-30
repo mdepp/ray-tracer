@@ -122,6 +122,7 @@ List of files and folders that should be present:
     |-- application.h
     |-- array.h
     |-- camera.h
+    |-- camera.cpp
     |-- ILI9341framework.cpp
     |-- ILI9341framework.h
     |-- light.h
