@@ -1,6 +1,6 @@
 # Line 1035 of /usr/share/arduino/Arduino.mk *appends* to CXXFLAGS, so
 # so changes here carry over to Arduino.mk
-# Enable c++ 14, optimize for size, indicate build is for arduino
+# Enable c++ 14, indicate build is for arduino
 CXXFLAGS += -std=gnu++14 -D ARDUINO_BUILD
 
 ######################################################
@@ -28,7 +28,7 @@ endif
 
 # Arduino Included Libraries
 ifndef ARDUINO_LIBS
-ARDUINO_LIBS = SD SPI Adafruit_GFX Adafruit_ILI9341 TouchScreen
+ARDUINO_LIBS = Adafruit_GFX Adafruit_ILI9341
 endif
 
 # User Installed Library Location
