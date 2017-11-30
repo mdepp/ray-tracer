@@ -16,6 +16,7 @@ try:
                     byte_read = ser.read()
                     if byte_read == b'\x02':
                         break
+                    print(chr(byte_read))
                 while True:
                     low = ser.read()
                     if low:

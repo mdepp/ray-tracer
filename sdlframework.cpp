@@ -125,7 +125,7 @@ void SDLFramework::clear(fvec3 colour)
     paintBackBuffer();
 }
 
-void SDLFramework::encodeColour(fvec3 colour)
+uint32_t SDLFramework::encodeColour(fvec3 colour)
 {
     int r = util::max(util::min(colour.r * 0xFF, 255.f), 0.f);
     int g = util::max(util::min(colour.g * 0xFF, 255.f), 0.f);
