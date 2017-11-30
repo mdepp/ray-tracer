@@ -1,4 +1,12 @@
-#ifdef ARDUINO_BUILD
+/*
+ * File: ILI9341framework.cpp
+ * Authors: Alexander Epp (1487716) and Mitchell Epp (...)
+ * Project: CMPUT274 Final Project
+ * Description: Implentation of WindowFramework interface that
+ *              runs on the Arduino.
+ */
+
+#ifdef ARDUINO_BUILD // Only include in build if building for the Arduino
 
 #include "ILI9341framework.h"
 
@@ -26,17 +34,24 @@ bool ILI9341Framework::idle()
 }
 void ILI9341Framework::clear(fvec3 colour)
 {
-    m_backgroundColour = colour;
+    m_backgroundColour = colour; // Store for later
     m_tft.fillScreen(encodeColour(m_backgroundColour));
 }
 void ILI9341Framework::drawPixel(uint16_t x, uint16_t y, fvec3 colour)
 {
     uint16_t encoded = encodeColour(colour);
-    if (m_backgroundColour != colour)
+    if (m_backgroundColour != colour) // Only draw if different colour than
+                                      // the background colour. This, of course,
+                                      // assumes that no pixel is ever written to
+                                      // twice.
     {
         m_tft.drawPixel(x, m_height-1-y, encodeColour(colour));
     }
-    Serial.write((char)2);
+    // Send pixel to computer
+
+    Serial.write((char)2); // Indicates to listener that this is data,
+                           // not debug information
+    // Write data one byte at a time, first low, then high
     Serial.write(lowByte(encoded));
     Serial.write(highByte(encoded));
 }
@@ -50,6 +65,7 @@ uint16_t ILI9341Framework::height()
 }
 uint16_t ILI9341Framework::encodeColour(vec3<float> colour)
 {
+    // Bits 15-11 are red, 10-5 are green, 4-0 are blue
     uint16_t r = constrain(colour.r * 31, 0, 31);
     uint16_t g = constrain(colour.g * 63, 0, 63);
     uint16_t b = constrain(colour.b * 31, 0, 31);
