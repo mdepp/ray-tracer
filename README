@@ -79,7 +79,7 @@ How to save an Arduino render
 
 How to restore an Arduino render
   * Requirements:
-      pyserial (pip3 install pyserial)
+    * pyserial (pip3 install pyserial)
     * progressbar2 (pip3 install progressbar2)
   * Navigate to the save-images subfolder. Run
       
