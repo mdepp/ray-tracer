@@ -1,21 +1,22 @@
-/* File: ILI9341framework.h
+/*
+ * File: ILI9341framework.h
  * Authors: Alexander Epp (1487716) and Mitchell Epp (1498821)
  * Project: CMPUT274 Final Project
  * Description: Implentation of WindowFramework interface that
- *              runs on an Arduino, using AdafruitILI9341. It is assumed that
- *              the screen is wired as in class;
- *              in particular, it expects CS <--> 10 and D/C <--> 9.
- *              
- *              This class also initializes all Arduino functions, and the
- *              Arduino Serial library, which are needed for utility functions
- *              on the Arduino.
+ *              runs on an Arduino, using AdafruitILI9341.
  */
 
 #pragma once
 
 #include "windowframework.h"
 #include <Adafruit_ILI9341.h>
-
+/*
+ * It is assumed that the screen is wired as in class; in particular, it
+ * expects CS <--> 10 and D/C <--> 9.
+ * 
+ * This class also initializes all Arduino functions, and the Arduino Serial
+ * library, which are needed for utility functions on the Arduino.
+ */
 class ILI9341Framework : public WindowFramework
 {
     // Public interface should look exactly like WindowFramework
@@ -34,12 +35,14 @@ public:
 
 private:
 
-    /* Converts colour stored as 3 floats in the range [0, 1] to the uint16_t
-    format required by AdafruitILI9341
+    /*
+     * Converts colour stored as 3 floats in the range [0, 1] to the uint16_t
+     * format required by AdafruitILI9341
      */
     uint16_t encodeColour(fvec3 colour);
 
-    /* Colour the screen has been cleared to. Stored because draw calls are
+    /*
+     * Colour the screen has been cleared to. Stored because draw calls are
      * *slow*, and thus it is undesirable to redraw the background colour when
      * unneeded.
      */

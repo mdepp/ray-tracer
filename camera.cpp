@@ -1,3 +1,10 @@
+/*
+ * File: camera.cpp
+ * Authors: Alexander Epp (1487716) and Mitchell Epp (1498821)
+ * Project: CMPUT274 Final Project
+ * Description: Implementation of camera functions
+ */
+
 #include "camera.h"
 
 Camera::Camera(int nPixelsX, int nPixelsY, float viewportWidth, float viewportDepth, fvec3 up) noexcept

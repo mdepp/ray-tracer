@@ -1,3 +1,10 @@
+/*
+ * File: raytracer.h
+ * Authors: Alexander Epp (1487716) and Mitchell Epp (1498821)
+ * Project: CMPUT274 Final Project
+ * Description: 
+ */
+
 #pragma once
 #include "array.h"
 #include "object.h"
