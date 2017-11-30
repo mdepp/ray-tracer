@@ -39,33 +39,41 @@ Building and Running
 How to Build (Arduino)
   * Requires: avr-g++ (with c++ 14 support), arduino-ua (should include Adafruit_GFX and Adafruit_ILI9341)
   * Make sure the terminal is in the base folder. Type:
-      make
+        
+        make
 
 How to Run (Arduino)
-  * Make sure the terminal is in the base folder, and that the Arduino is connected to /dev/ttyACM0. Type
-     make upload
+  * Make sure the terminal is in the base folder, and that the Arduino is connected to /dev/ttyACM0. Type:
+        
+        make upload
 
 How to Build (Linux)
   * Requires:
     *  SDL 2 (sudo apt-get install libsdl2-dev)
     *  CMake
   * Make sure the terminal is in the base folder. First, setup the makefile by typing:
-      mkdir build-cmake
-      cd build-cmake
-      cmake ..
+        
+        mkdir build-cmake
+        cd build-cmake
+        cmake ..
+        
   * Now the project can be built with:
-      make
+        
+        make
 
 How to Run (Linux)
   * From the build-cmake folder (see How to Build), type
-      ./ray-tracer
+        
+        ./ray-tracer
 
 How to save an Arduino render
   * Requirements:
     * pyserial (pip3 install pyserial)
     * progressbar2 (pip3 install progressbar2)
   * After building and running on the Arduino, navigate to the save-images subfolder, and type
-      python3 save_image.py /dev/ttyACM0 filename
+        
+        python3 save_image.py /dev/ttyACM0 filename
+  
   * If the process does not begin saving immediately, press the reset button on the Arduino.
   * This will collect the image data from the Arduino via the Serial port, storing it for later
 
@@ -74,9 +82,13 @@ How to restore an Arduino render
       pyserial (pip3 install pyserial)
     * progressbar2 (pip3 install progressbar2)
   * Navigate to the save-images subfolder. Run
-      make upload
+      
+        make upload
+  
   * Then type
-      python3 load_image.py /dev/ttyACM0 filename
+      
+        python3 load_image.py /dev/ttyACM0 filename
+  
   * This will stream the image data to the Arduino, where it will display to the screen
 
 File Structure
