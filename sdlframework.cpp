@@ -127,9 +127,9 @@ void SDLFramework::clear(fvec3 colour)
 
 void SDLFramework::encodeColour(fvec3 colour)
 {
-    int r = util::min(colour.r * 0xFF, 255.f);
-    int g = util::min(colour.g * 0xFF, 255.f);
-    int b = util::min(colour.b * 0xFF, 255.f);
+    int r = util::max(util::min(colour.r * 0xFF, 255.f), 0.f);
+    int g = util::max(util::min(colour.g * 0xFF, 255.f), 0.f);
+    int b = util::max(util::min(colour.b * 0xFF, 255.f), 0.f);
 
     return 0xFF000000 | (r<<16) | (g<<8) | b;
 }

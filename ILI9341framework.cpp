@@ -7,8 +7,10 @@
 ILI9341Framework::ILI9341Framework()
  : m_backgroundColour(0.f, 0.f, 0.f), m_width(320), m_height(240), m_tft(10, 9)
 {
+    // Initialize general Arduino-specific libraries
     init();
     Serial.begin(9600);
+    // Initialize screen and rotate to the standard orientation used in class.
     m_tft.begin();
     m_tft.setRotation(3);
 }
@@ -34,8 +36,10 @@ void ILI9341Framework::drawPixel(uint16_t x, uint16_t y, fvec3 colour)
     uint16_t encoded = encodeColour(colour);
     if (m_backgroundColour != colour)
     {
+        // Don't draw pixels of background colour (since drawing is really slow)
         m_tft.drawPixel(x, m_height-1-y, encodeColour(colour));
     }
+    // Send pixel colour to save_image.py
     Serial.write((char)2);
     Serial.write(lowByte(encoded));
     Serial.write(highByte(encoded));

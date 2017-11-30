@@ -32,5 +32,11 @@
         "type_traits": "cpp",
         "typeinfo": "cpp",
         "utility": "cpp"
-    }
+    },
+    "cSpell.words": [
+        "arduino",
+        "escape",
+        "fvec",
+        "sdlk"
+    ]
 }

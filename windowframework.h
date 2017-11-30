@@ -1,6 +1,9 @@
 /*
  * This file contains the WindowFramework interface, which is used to
  * standardize drawing to the screen across the Arduino and desktop platforms.
+ * 
+ * Despite the name, this class is also responsible for initializing any
+ * platform-specific libraries used elsewhere (e.g. Serial for Arduino).
  */
 
 #pragma once
