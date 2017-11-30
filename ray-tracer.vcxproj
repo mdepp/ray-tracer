@@ -113,6 +113,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="camera.cpp" />
     <ClCompile Include="ILI9341framework.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="plane.cpp" />

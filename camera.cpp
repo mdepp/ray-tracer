@@ -1,6 +1,6 @@
 #include "camera.h"
 
-Camera::Camera(int nPixelsX, int nPixelsY, float viewportWidth, float viewportDepth, fvec3 up = { 0,1,0 }) noexcept
+Camera::Camera(int nPixelsX, int nPixelsY, float viewportWidth, float viewportDepth, fvec3 up) noexcept
   : m_nPixelsX(nPixelsX), m_nPixelsY(nPixelsY),
     m_viewportWidth(viewportWidth), m_viewportHeight(m_viewportWidth / float(m_nPixelsX)*m_nPixelsY),
     m_viewportDepth(viewportDepth),

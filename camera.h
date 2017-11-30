@@ -1,3 +1,10 @@
+/*
+ * File: application.h
+ * Authors: Alexander Epp (1487716) and Mitchell Epp (1498821)
+ * Project: CMPUT274 Final Project
+ * Description: A camera class for translating pixels to rays
+ */
+
 #pragma once
 #include "transformation.h"
 #include "ray.h"

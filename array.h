@@ -1,23 +1,30 @@
+/*
+ * File: application.h
+ * Authors: Alexander Epp (1487716) and Mitchell Epp (1498821)
+ * Project: CMPUT274 Final Project
+ * Description: A static-memory array of a maximum size
+ */
+
 #pragma once
 
 #include "util.h"
 
+/*
+ * Mimics a raw c-style array (including not using dynamic memory since this
+ * should work on the Arduino), but stores a current length and supports
+ * range-based for loops. It has two template paramters: the type of data to
+ * store, and the maximum size of the array.
+ */
 template <typename T, size_t MAX_SIZE>
 class Array
 {
 public:
     using Type = T;
-
-    template <typename... Args>
-    Array(Args&&... args) : m_data{util::forward<Args>(args)...}
+    // Initialize the array as empty
+    Array() : m_curSize(0)
     {
-        m_curSize = sizeof...(Args);
     }
-    Array()
-    {
-        m_curSize = 0;
-    }
-
+    // Add an element (like std::vector::emplace_back)
     template <typename... Args>
     bool add(Args&&... args)
     {
@@ -26,6 +33,7 @@ public:
         m_data[m_curSize++] = T(util::forward<Args>(args)...);
         return true;
     }
+    // Utility functions
     T& front()
     {
         return m_data[0];
@@ -38,6 +46,7 @@ public:
     {
         return m_curSize;
     }
+    // Support for range-based for loops
     T* begin()
     {
         return m_data;
@@ -46,6 +55,7 @@ public:
     {
         return m_data+m_curSize;
     }
+    // Usual array operations
     template <typename Index>
     T& operator [] (Index index)
     {
