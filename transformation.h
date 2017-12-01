@@ -1,12 +1,25 @@
+/*
+ * File: transformation.h
+ * Authors: Alexander Epp (1487716) and Mitchell Epp (1498821)
+ * Project: CMPUT274 Final Project
+ * Description: Contains a class for 3D transformations
+ */
+
 #include "vec.h"
 
 /*
- * Represents an affine transformation from R^3 into R^3, represented by a 4x4 matrix.
+ * Trans3 is a transformation from R^3 -> R^3 represented by a 4x4 matrix
+ * (this is using homogeneous coordinates I believe, but I'm not entirely clear
+ * on the terminology). This supports all linear tranformations, plus translation,
+ * linear perspective, etc.
+ * 
+ * Most operations (e.g. composition) are very inefficient, but are very simple
+ * to write, understand, and debug.
  */
 template<typename T>
 struct Trans3
 {
-	// Initialize transformation matrix with column vectors (or equivilently,
+	// Initialize transformation matrix with column vectors (or equivalently,
 	// for transformed standard basis vectors).
     Trans3(vec4<T> e1, vec4<T> e2, vec4<T> e3, vec4<T> e4) noexcept
         : m_e1(e1), m_e2(e2), m_e3(e3), m_e4(e4)
@@ -18,7 +31,7 @@ struct Trans3
     Trans3() noexcept
         : Trans3({1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}) {}
 
-
+    
     vec4<T> transform(const vec4<T>& vec) const noexcept
     {
         return { m_e1*vec.x + m_e2*vec.y + m_e3*vec.z + m_e4*vec.w };
@@ -32,8 +45,8 @@ struct Trans3
 	vec4<T> m_e1, m_e2, m_e3, m_e4; // Transformed basis vectors (i.e. column vectors of matrix)
 };
 
-// Returns the matrix representing the composition of m1 and m2 (this is really
-// just matrix multiplication).
+// Returns the transformation representing the composition of m1 and m2 (this is
+// really just matrix multiplication).
 template<typename T>
 Trans3<T> compose(const Trans3<T>& m1, const Trans3<T>& m2)
 {
