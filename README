@@ -132,7 +132,6 @@ List of files and folders that should be present:
     |-- ray.h
     |-- raytracer.cpp
     |-- raytracer.h
-    |-- reverse_sphere.h
     |-- sdlframework.cpp
     |-- sdlframework.h
     |-- sphere.cpp
