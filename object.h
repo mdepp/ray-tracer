@@ -1,3 +1,12 @@
+/*
+ * File: object.h
+ * Authors: Alexander Epp (1487716) and Mitchell Epp (1498821)
+ * Project: CMPUT274 Final Project
+ * Description: Contains an interface used by all objects to be rendered by
+ *              renderer. This guarantees each object knows about ray intersection
+ *              with itself.
+ */
+
 #pragma once
 #include "ray.h"
 #include "vec.h"

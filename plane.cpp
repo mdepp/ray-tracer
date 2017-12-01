@@ -1,3 +1,10 @@
+/*
+ * File: plane.cpp
+ * Authors: Alexander Epp (1487716) and Mitchell Epp (1498821)
+ * Project: CMPUT274 Final Project
+ * Description: Implementations of Plane functions.
+ */
+
 #include "plane.h"
 #include "ray.h"
 #include "util.h"

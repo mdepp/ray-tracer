@@ -1,3 +1,10 @@
+/*
+ * File: light.h
+ * Authors: Alexander Epp (1487716) and Mitchell Epp (1498821)
+ * Project: CMPUT274 Final Project
+ * Description: Contains structures for storing information about lights.
+ */
+
 #pragma once
 
 #include "vec.h"
@@ -19,6 +26,8 @@ struct DirectionalLight
     fvec3 direction;
     fvec3 colour;
 };
+// A struct is a bit overkill here, but this will help if light data is made
+// more complex. 
 struct AmbientLight
 {
     AmbientLight() = default;

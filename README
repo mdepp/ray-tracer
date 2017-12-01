@@ -47,6 +47,24 @@ How to Run (Arduino)
         
         make upload
 
+How to Build (Windows)
+  * Requires
+    * Visual Studio 2017 with Windows SDK 10.0.16299.0
+    * vcpkg (for dependency management)
+    * SDL 2 (installed with 'vcpkg install sdl2:x64-windows')
+
+  * Open 'ray-tracer.sln' from the base folder in Visual Studio 2017
+  * Switch the build type to x64 Release
+  * Build the 'ray-tracer' project
+
+How to Run (Windows)
+  * From the command prompt in the base folder, type
+
+        cd x64\Release
+        ray-tracer.exe
+
+    * The program can also be run directly from the file explorer as usual
+
 How to Build (Linux)
   * Requires:
     *  SDL 2 (sudo apt-get install libsdl2-dev)
@@ -66,7 +84,7 @@ How to Run (Linux)
         
         ./ray-tracer
 
-How to save an Arduino render
+How to save an Arduino render (Linux)
   * Requirements:
     * pyserial (pip3 install pyserial)
     * progressbar2 (pip3 install progressbar2)
@@ -77,7 +95,7 @@ How to save an Arduino render
   * If the process does not begin saving immediately, press the reset button on the Arduino.
   * This will collect the image data from the Arduino via the Serial port, storing it for later
 
-How to restore an Arduino render
+How to restore an Arduino render (Linux)
   * Requirements:
     * pyserial (pip3 install pyserial)
     * progressbar2 (pip3 install progressbar2)
@@ -104,6 +122,7 @@ List of files and folders that should be present:
     |-- application.h
     |-- array.h
     |-- camera.h
+    |-- camera.cpp
     |-- ILI9341framework.cpp
     |-- ILI9341framework.h
     |-- light.h
