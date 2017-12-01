@@ -13,7 +13,6 @@
 #include "plane.h"
 #include "util.h"
 #include "vec.h"
-#include "reverse_sphere.h"
 #include "camera.h"
 
 // Declaring objects in the global scope allows avr-g++ to
