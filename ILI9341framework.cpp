@@ -17,7 +17,7 @@ ILI9341Framework::ILI9341Framework()
 {
     // Initialize general Arduino-specific libraries
     init();
-    Serial.begin(9600);
+    Serial.begin(115200);
     // Initialize screen and rotate to the standard orientation used in class.
     m_tft.begin();
     m_tft.setRotation(3);

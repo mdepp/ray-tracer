@@ -45,6 +45,24 @@ Camera cam(fw.width(), fw.height(), 10.f, 5.f);
 
 int main(int argc, char* argv[])
 {
+    /*for (int i = 1; i < argc-1; i += 2)
+    {
+        auto flag = argv[i];
+        auto val  = argv[i+1];
+
+        if (strcmp(flag, "-s") == 0)
+        {
+            randomSeed = atoi(val);
+        }
+        else if (strcmp(flag, "-r") == 0)
+        {
+            recursionDepth = atoi(val);
+        }
+    }*/
+
+    util::srand();
+    util::setFromFlags(argc, argv, "-s", [&](auto s) {util::srand(atoi(s));}, "-r", [&](auto r) {rt.setRecursionDepth(atoi(r));});
+
     // Camera is at (-10, -10, 0), looking at (0, 0, 10)
     cam.lookAt({ -10, -10, 0}, { 0, 0, 10 });
 
@@ -65,7 +83,6 @@ int main(int argc, char* argv[])
     rt.addObject(&p6);
 
     // Create random lights, and add them to the scene
-    util::randomSeed();
     for (int i = 0; i < 15; ++i)
     {
         fvec3 pos(util::random(20)-10, util::random(20)-10, util::random(20));

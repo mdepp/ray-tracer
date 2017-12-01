@@ -28,7 +28,7 @@ endif
 
 # Arduino Included Libraries
 ifndef ARDUINO_LIBS
-ARDUINO_LIBS = Adafruit_GFX Adafruit_ILI9341
+ARDUINO_LIBS = SPI Adafruit_GFX Adafruit_ILI9341
 endif
 
 # User Installed Library Location

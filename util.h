@@ -11,22 +11,6 @@
 #undef max
 namespace util
 {
-    /*template <typename S, typename T>
-    auto max(S&& a, T&& b)
-    {
-        return a < b ? b : a;
-    }
-    template <typename S, typename T>
-    auto min(S&& a, T&& b)
-    {
-        return a < b ? a : b;
-    }
-    template <typename T>
-    auto inline abs(T&& n)
-    {
-        return n < 0 ? -n : n;
-    }
-*/
     template<typename T>
     T max(T a, T b) {return a < b ? b : a;}
     template<typename T>
@@ -65,7 +49,9 @@ namespace util
     }
 
     // Seed random number generator nondeterministically
-    void randomSeed();
+    void srand();
+    // Seed random number generator
+    void srand(uint32_t);
 
     uint8_t* getStackPointer();
     // https://github.com/esp8266/Arduino/issues/81
@@ -77,6 +63,7 @@ namespace util
 #include <cmath>
 #include <cstdint>
 #include <cstdlib>
+#include <cstring>
 #include <ctime>
 namespace util
 {
@@ -96,10 +83,28 @@ namespace util
         debugPrint(std::forward<Args>(args)...);
     }
 
+    template <typename SetFnc>
+    void setFromFlags(int argc, char** argv, const char* flag, SetFnc&& setFnc)
+    {
+        for (int i = 1; i < argc-1; i += 2)
+        {
+            if (strcmp(argv[i], flag) == 0)
+                setFnc(argv[i+1]);
+        }
+    }
+    template <typename SetFnc, typename... Args>
+    void setFromFlags(int argc, char** argv, const char* flag, SetFnc&& setFnc, Args&&... args)
+    {
+        setFromFlags(argc, argv, flag, std::forward<SetFnc>(setFnc));
+        setFromFlags(argc, argv, std::forward<Args>(args)...);
+    }
+
     // Generate a random integer in the range [0, max)
     int32_t random(int32_t maxval);
     // Seed random number generator nondeterministically
-    void randomSeed();
+    void srand();
+    // Seed random number generator
+    void srand(uint32_t);
 
     uint8_t* getStackPointer();
     // https://github.com/esp8266/Arduino/issues/81
@@ -109,6 +114,27 @@ namespace util
 
 namespace util
 {
+    template <typename SetFnc>
+    void setFromFlag(const char* aflag, const char* aval, const char* flag, SetFnc&& setFnc)
+    {
+        if (strcmp(aflag, flag) == 0)
+            setFnc(aval);
+        }
+    }
+    template <typename SetFnc, typename... Args>
+    void setFromFlag(const char* aflag, const char* aval, const char* flag, SetFnc&& setFnc, Args&&... args)
+    {
+        setFromFlag(aflag, aval, flag, std::forward<SetFnc>(setFnc));
+        setFromFlag(aflag, aval, std::forward<Args>(args)...);
+    }
+    template <typename SetFnc, typename... Args>
+    void setFromFlags(int argc, char** argv, const char* flag, SetFnc&& setFnc, Args&&... args)
+    {
+        // Read in data somehow
+        // For each pair read in, call setFromFlag
+        
+    }
+
     template<typename T>
     T pow2(T base)
     {

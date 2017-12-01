@@ -27,3 +27,4 @@ include_directories(${SDL2_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} )
 
 set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_CXX_FLAGS -Wall)
