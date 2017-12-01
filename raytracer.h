@@ -2,7 +2,8 @@
  * File: raytracer.h
  * Authors: Alexander Epp (1487716) and Mitchell Epp (1498821)
  * Project: CMPUT274 Final Project
- * Description: 
+ * Description: Contains the RayTracer class, which traces the path of rays cast
+ *              by the Camera, and renders the results to a WindowFramework.
  */
 
 #pragma once
@@ -21,18 +22,41 @@ public:
     RayTracer(int);
     ~RayTracer();
 
-    template<typename T/*, typename...Args*/>
-    T* addObject(T* object/*Args&& ...args*/);
-
+    /*
+     * Add an object to the scene to be rendered (the object is added as
+     * a pointer instead of using variadic templates like the other methods
+     * since this allows allocating memory for each object statically).
+     * If the object pointer was successfully added, it is returned; otherwise
+     * nullptr is returned.
+     * RayTracer is not responsible for deleting these objects.
+     */
+    template<typename T>
+    T* addObject(T* object);
+    /*
+     * Add a point light to the scene to be rendered. Arguments are the
+     * arguments to PointLight's c-tor.
+     */
     template<typename...Args>
     bool addPointLight(Args&& ...args);
-
+    /*
+     * Add a directional light to the scene to be rendered. Arguments are the
+     * arguments to DirectionalLight's c-tor. Returns true iff the light was
+     * successfully added.
+     */
     template<typename...Args>
     bool addDirectionalLight(Args&& ...args);
-
+    /*
+     * Set the ambient light of the scene to be rendered. Arguments are the 
+     * arguments to AmbientLight's c-tor. Returns true iff the light was
+     * successfully added.
+     */
     template<typename...Args>
     void setAmbientLight(Args&& ...args);
-
+    /*
+     * Render the scene to a given WindowFramework, with rays cast by Camera.
+     * Returns false if WindowFramework indicates the application should quit,
+     * and true otherwise.
+     */
     bool render(WindowFramework* fw, Camera* cam);
 private:
 
@@ -41,10 +65,7 @@ private:
     * a ray. If there is no such intersection, nullptr is returned instead.
     */
     Object* getFirstIntersection(Ray ray);
-    /*
-    * Returns true if the given line segment intersects with an object
-    */
-    bool segmentIntersects(Ray ray, float length);
+
     /*
     * Cast a ray and recursively trace its path. Returns the colour "seen"
     * with the ray.
@@ -62,11 +83,9 @@ private:
     Ray reflectRay(Ray ray, fvec3 normal);
 
     fvec3 m_backgroundColour;
-    const float m_minIntensityThreshold;
+    const float m_minIntensityThreshold; // Stop recursing once light intensity is below this threshold
     const uint16_t m_maxRecursionDepth;
-    // If an object is closer than this to the origin of a ray, intersection is not registered (this stops rays colliding directly
-    // after reflecting).
-    const float m_minRayLength;
+    const float m_minRayLength; // Rays must intersect at a point beyond this length
 
     Array<Object*, NumObjects> m_objects;
     Array<PointLight, NumPointLights> m_pointLights;
@@ -77,32 +96,34 @@ private:
 template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>
 RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::RayTracer(int maxRecursionDepth)
     : m_backgroundColour(0.f, 0.f, 0.f),
-    m_minIntensityThreshold(0.001f),
-    m_maxRecursionDepth(maxRecursionDepth),
-    m_minRayLength(0.001)
+      m_minIntensityThreshold(0.001f),
+      m_maxRecursionDepth(maxRecursionDepth),
+      m_minRayLength(0.001)
 {
 }
 template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>
 RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::~RayTracer()
 {
-    /*for (auto o : m_objects)
-        delete o;*/
+    // RayTracer is not responsible for deleting objects (and lights are cleaned
+    // up automatically).
 }
 
 template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>
 fvec3 RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::getLighting(fvec3 point, fvec3 normal)
 {
-    //return fvec3(1.f, 1.f, 1.f);
     fvec3 total(0.f, 0.f, 0.f);
     for (auto& light : m_pointLights)
     {
         auto diff = light.position - point;
         auto dir = normalize(diff);
-        if (!segmentIntersects(Ray(light.position, dir), diff.length()))
-        {
-            //normal += fvec3((rand()%2-1)/100.f, (rand()%2-1)/100.f, (rand()%2-1)/100.f);
-            total += light.colour * util::max(dot(normal, dir), 0.f) * util::min(light.intensity / diff.length2(), 1.f);
-        }
+        // A shadow ray test would go here
+        //normal += fvec3((rand()%2-1)/100.f, (rand()%2-1)/100.f, (rand()%2-1)/100.f);
+
+        // Only accumulate light if light ray is on the 'outside' of the object
+        // (toward the normal). Since a 2D object (such as a plane) can be viewed
+        // from both sides, *both* sides will be lit, but only by lights from
+        // *one* side.
+        total += light.colour * util::max(dot(normal, dir), 0.f) * util::min(light.intensity / diff.length2(), 1.f);
     }
     for (auto& light : m_directionalLights)
     {
@@ -116,10 +137,10 @@ fvec3 RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::getLighting(f
 template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>
 Ray RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::reflectRay(Ray ray, fvec3 normal)
 {
-    //if (dot(ray.dir, normal) < 0)
+    if (dot(ray.dir, normal) < 0)
         return { ray.origin, -reflectNormalized(ray.dir, normal) };
-    //else
-    //    return { ray.origin, -reflectNormalized(ray.dir, -normal) };
+    else
+        return { ray.origin, -reflectNormalized(ray.dir, -normal) };
 }
 
 template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>
@@ -137,24 +158,6 @@ bool RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::render(WindowF
     return true;
 }
 
-template <uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>
-bool RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::segmentIntersects(Ray ray, float length)
-{
-    return false;
-    for (auto object : m_objects)
-    {
-        if (object)
-        {
-            auto distance = object->intersect(ray, nullptr);
-            if (distance >= m_minRayLength && distance <= length)
-            {
-                return true;
-            }
-        }
-    }
-    return false;
-}
-
 template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>
 Object * RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::getFirstIntersection(Ray ray)
 {
@@ -166,7 +169,11 @@ Object * RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::getFirstIn
         if (object) // Only consider used objects
         {
             auto distance = object->intersect(ray, nullptr);
-            if (distance >= m_minRayLength) // Only consider objects that actually intersect ray
+            
+            // Objects must be a certain distance from ray origin (otherwise
+            // rays would reflect several times in a row from the same
+            // intersection point).
+            if (distance >= m_minRayLength)
             {
                 if (!closestObject || distance < closestDistance)
                 {
@@ -188,31 +195,34 @@ fvec3 RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::castRay(Ray r
     // Get the first object that intersects this ray
     auto intersectingObject = getFirstIntersection(ray);
 
+    // Stop if no intersection took place
     if (!intersectingObject)
-        return m_ambientLight.colour; // Stop if no intersection took place
+        return m_ambientLight.colour;
 
-                                   // Get detailed information of the intersection
+    // Get detailed information of the intersection
     IntersectionData id;
     if (intersectingObject->intersect(ray, &id) < 0)
         util::debugPrint("castRay() could not find an intersection for supposedly intersecting object.");
-    // Calculate next ray and cast it
-    auto reflectedRay = reflectRay({ id.intersection, ray.dir }, id.normal); // Ray(id.intersection, -reflectNormalized(ray.dir, id.normal));
-    auto reflectedIntensity = intensity*id.reflectionCoefficient;
 
-    //util::debugPrint(id.normal.x, ", ", id.normal.y, ", ", id.normal.z);
+    // Calculate reflected ray
+    auto reflectedRay = reflectRay({ id.intersection, ray.dir }, id.normal);
+    auto reflectedIntensity = intensity*id.reflectionCoefficient;
+    
+    // Calculate diffuse lighting at reflection point
     auto lighting = getLighting(id.intersection, id.normal);
 
-    return lighting * id.colour*(1.f - id.reflectionCoefficient)
-        + castRay(reflectedRay, reflectedIntensity, recursionDepth + 1)*id.reflectionCoefficient;
+    // Cast the reflected ray
+    return lighting*id.colour*(1.f - id.reflectionCoefficient)
+        + castRay(reflectedRay, reflectedIntensity, recursionDepth+1)*id.reflectionCoefficient;
 }
 
 template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>
-template<typename T/*, typename ...Args*/>
-T * RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::addObject(T* object/*Args&& ...args*/)
+template<typename T>
+T * RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::addObject(T* object)
 {
-    if (m_objects.add(object/*new T(util::forward<Args>(args)...))*/))
+    if (m_objects.add(object))
     {
-        return static_cast<T*>(m_objects.back());
+        return object;
     }
     else
     {
