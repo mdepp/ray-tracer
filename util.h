@@ -11,6 +11,27 @@
 #undef max
 namespace util
 {
+    template <typename SetFnc>
+    void setFromFlag(const char* aflag, const char* aval, const char* flag, SetFnc&& setFnc)
+    {
+        if (strcmp(aflag, flag) == 0)
+            setFnc(aval);
+        }
+    }
+    template <typename SetFnc, typename... Args>
+    void setFromFlag(const char* aflag, const char* aval, const char* flag, SetFnc&& setFnc, Args&&... args)
+    {
+        setFromFlag(aflag, aval, flag, std::forward<SetFnc>(setFnc));
+        setFromFlag(aflag, aval, std::forward<Args>(args)...);
+    }
+    template <typename SetFnc, typename... Args>
+    void setFromFlags(int argc, char** argv, const char* flag, SetFnc&& setFnc, Args&&... args)
+    {
+        // Read in data somehow
+        // For each pair read in, call setFromFlag
+        
+    }
+
     template<typename T>
     T max(T a, T b) {return a < b ? b : a;}
     template<typename T>
@@ -114,27 +135,6 @@ namespace util
 
 namespace util
 {
-    template <typename SetFnc>
-    void setFromFlag(const char* aflag, const char* aval, const char* flag, SetFnc&& setFnc)
-    {
-        if (strcmp(aflag, flag) == 0)
-            setFnc(aval);
-        }
-    }
-    template <typename SetFnc, typename... Args>
-    void setFromFlag(const char* aflag, const char* aval, const char* flag, SetFnc&& setFnc, Args&&... args)
-    {
-        setFromFlag(aflag, aval, flag, std::forward<SetFnc>(setFnc));
-        setFromFlag(aflag, aval, std::forward<Args>(args)...);
-    }
-    template <typename SetFnc, typename... Args>
-    void setFromFlags(int argc, char** argv, const char* flag, SetFnc&& setFnc, Args&&... args)
-    {
-        // Read in data somehow
-        // For each pair read in, call setFromFlag
-        
-    }
-
     template<typename T>
     T pow2(T base)
     {

@@ -86,7 +86,7 @@ private:
 
     fvec3 m_backgroundColour;
     const float m_minIntensityThreshold; // Stop recursing once light intensity is below this threshold
-    const uint16_t m_maxRecursionDepth;
+    uint16_t m_maxRecursionDepth;
     const float m_minRayLength; // Rays must intersect at a point beyond this length
 
     Array<Object*, NumObjects> m_objects;
