@@ -1,8 +1,5 @@
 #pragma once
 
-/*
- * There's a bit of a problem here since randomSeed duplicates an Arduino function name.
- */
 
 #ifdef ARDUINO_BUILD
 #include <Arduino.h>
@@ -11,27 +8,6 @@
 #undef max
 namespace util
 {
-    template <typename SetFnc>
-    void setFromFlag(const char* aflag, const char* aval, const char* flag, SetFnc&& setFnc)
-    {
-        if (strcmp(aflag, flag) == 0)
-            setFnc(aval);
-        }
-    }
-    template <typename SetFnc, typename... Args>
-    void setFromFlag(const char* aflag, const char* aval, const char* flag, SetFnc&& setFnc, Args&&... args)
-    {
-        setFromFlag(aflag, aval, flag, std::forward<SetFnc>(setFnc));
-        setFromFlag(aflag, aval, std::forward<Args>(args)...);
-    }
-    template <typename SetFnc, typename... Args>
-    void setFromFlags(int argc, char** argv, const char* flag, SetFnc&& setFnc, Args&&... args)
-    {
-        // Read in data somehow
-        // For each pair read in, call setFromFlag
-        
-    }
-
     template<typename T>
     T max(T a, T b) {return a < b ? b : a;}
     template<typename T>
@@ -102,22 +78,6 @@ namespace util
     {
         std::cout << first;
         debugPrint(std::forward<Args>(args)...);
-    }
-
-    template <typename SetFnc>
-    void setFromFlags(int argc, char** argv, const char* flag, SetFnc&& setFnc)
-    {
-        for (int i = 1; i < argc-1; i += 2)
-        {
-            if (strcmp(argv[i], flag) == 0)
-                setFnc(argv[i+1]);
-        }
-    }
-    template <typename SetFnc, typename... Args>
-    void setFromFlags(int argc, char** argv, const char* flag, SetFnc&& setFnc, Args&&... args)
-    {
-        setFromFlags(argc, argv, flag, std::forward<SetFnc>(setFnc));
-        setFromFlags(argc, argv, std::forward<Args>(args)...);
     }
 
     // Generate a random integer in the range [0, max)

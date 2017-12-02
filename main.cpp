@@ -8,6 +8,7 @@
  */
 
 #include "application.h"
+#include "config.h"
 #include "raytracer.h"
 #include "sphere.h"
 #include "plane.h"
@@ -60,7 +61,7 @@ int main(int argc, char* argv[])
     }*/
 
     util::srand();
-    util::setFromFlags(argc, argv, "-s", [&](auto s) {util::srand(atoi(s));}, "-r", [&](auto r) {rt.setRecursionDepth(atoi(r));});
+    config::setFromFlags(argc, argv, "-s", [&](auto s) {util::srand(atol(s));}, "-r", [&](auto r) {rt.setRecursionDepth(atol(r));});
 
     // Camera is at (-10, -10, 0), looking at (0, 0, 10)
     cam.lookAt({ -10, -10, 0}, { 0, 0, 10 });
