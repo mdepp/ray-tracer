@@ -3,36 +3,8 @@
 # Enable c++ 14, indicate build is for arduino
 CXXFLAGS += -std=gnu++14 -D ARDUINO_BUILD -D ARDUINO_ARGS="$(args)"
 
-######################################################
-# The following code forces recompiling of config.h when user changes the args
-# variable (e.g. with make args="-s 1000").
-# Works by introducing a 'prebuild' step which possibly touches config.h, causing
-# it to recompile.
-#
-
-# Default make has to depend on prebuild
-all_custom: prebuild all
-
-# Override upload to depend on prebuild, and run upload manually
-upload: prebuild
-	$(MAKE) -f /usr/share/arduino/Arduino.mk upload
-
-# Prebuild step
-prebuild:
-	# build-mega2560 folder may not exist, but is needed for the next steps, so
-	# create it if it doesn't.
-	@mkdir build-mega2560 -p
-	# Store new configuration flags
-	@echo "$(args)" > build-mega2560/config_cmd_record_tmp
-	# Compare with old configuration flags. If there is a difference, touch config.h
-	@cmp -s build-mega2560/config_cmd_record_tmp build-mega2560/config_cmd_record; \
-	RETVAL=$$?; \
-	if [ $$RETVAL != 0 ]; then \
-		echo "Recompiling config.h"; \
-		touch config.h; \
-	fi
-	# New configuration flags are next time's old configuration flags
-	@echo "$(args)" > build-mega2560/config_cmd_record
+# Force rebuild of config.h if args is different than last time
+RE:=$(shell sh update_config.sh "$(args)")
 
 ######################################################
 # Arduino UA Child Makefile (UPDATED: 31/07/2017)
