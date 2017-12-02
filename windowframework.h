@@ -1,14 +1,21 @@
 /*
- * This file contains the WindowFramework interface, which is used to
- * standardize drawing to the screen across the Arduino and desktop platforms.
- * 
- * Despite the name, this class is also responsible for initializing any
- * platform-specific libraries used elsewhere (e.g. Serial for Arduino).
+ * File: windowframework.h
+ * Authors: Alexander Epp (1487716) and Mitchell Epp (1498821)
+ * Project: CMPUT274 Final Project
+ * Description: Defines a cross-platform drawing interface
  */
 
 #pragma once
 #include "util.h"
 #include "vec.h"
+
+/*
+ * The WindowFramework interface is used to standardize drawing to the screen
+ * across the Arduino and desktop platforms.
+ * 
+ * Despite the name, this class is also responsible for initializing any
+ * platform-specific libraries used elsewhere (e.g. Serial for Arduino).
+ */
 
 class WindowFramework
 {

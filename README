@@ -1,7 +1,20 @@
-# ray-tracer
+Ray Tracer (CMPUT274 Final Project)
 
 Authors: Alex Epp (1487716), Mitchell Epp (1498821)
 Section: LBL EA1
+
+Credits and Code Re-use
+===========================================================
+There are several instances in which code or algorithms from other sources have
+been used. Each instance is acknowledged in the source code (typically with a link)
+ * Object/ray intersection algorithms were taken from Wikipedia
+ * Example source of several standard library functions was used from a few
+   different sources
+ * Code for reading random numbers from Arduino analog pins was originally from
+   project 1
+ * The random number generator algorithm was from Wikipedia
+ * The camera 'look at' algorithm was inspired by a Github issue for toji/gl-matrix
+ * The vector class was based on code from project 2 part 1
 
 Hardware Setup
 ===========================================================
@@ -121,11 +134,13 @@ List of files and folders that should be present:
         |-- Makefile
     |-- application.h
     |-- array.h
-    |-- camera.h
     |-- camera.cpp
+    |-- camera.h
+    |-- config.h
     |-- ILI9341framework.cpp
     |-- ILI9341framework.h
     |-- light.h
+    |-- main.cpp
     |-- object.h
     |-- plane.cpp
     |-- plane.h
@@ -144,4 +159,4 @@ List of files and folders that should be present:
     |-- windowframework.h
     |-- CMakeLists.txt
     |-- Makefile
-    |-- README.md
+    |-- README

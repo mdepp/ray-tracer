@@ -1,5 +1,9 @@
 /*
- * Note: This class was based in part on code used in our project 2 part 1 submission
+ * File: vec.h
+ * Authors: Alexander Epp (1487716) and Mitchell Epp (1498821)
+ * Project: CMPUT274 Final Project
+ * Description: Utilities for 4- and 3-dimensional vectors. Based in part on
+ *              code used in our project 2 part 1 submission.
  */
 
 #pragma once

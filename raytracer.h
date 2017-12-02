@@ -19,6 +19,9 @@ template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLi
 class RayTracer
 {
 public:
+    /*
+     * Initialize ray-tracer by specifying maximum recursion depth
+     */
     RayTracer(int);
     ~RayTracer();
 
@@ -58,7 +61,10 @@ public:
      * and true otherwise.
      */
     bool render(WindowFramework* fw, Camera* cam);
-
+    
+    /*
+     * Set the maximum recursion depth of the ray-tracing algorithm.
+     */
     void setRecursionDepth(int);
 private:
 
@@ -122,9 +128,9 @@ fvec3 RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::getLighting(f
         //normal += fvec3((rand()%2-1)/100.f, (rand()%2-1)/100.f, (rand()%2-1)/100.f);
 
         // Only accumulate light if light ray is on the 'outside' of the object
-        // (toward the normal). Since a 2D object (such as a plane) can be viewed
-        // from both sides, *both* sides will be lit, but only by lights from
-        // *one* side.
+        // (direction in which the surface normal points). Since a 2D object
+        // (such as a plane) can be viewed from both sides, *both* sides will be
+        // lit, but only by lights from *one* side.
         total += light.colour * util::max(dot(normal, dir), 0.f) * util::min(light.intensity / diff.length2(), 1.f);
     }
     for (auto& light : m_directionalLights)
@@ -173,8 +179,8 @@ Object * RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::getFirstIn
             auto distance = object->intersect(ray, nullptr);
             
             // Objects must be a certain distance from ray origin (otherwise
-            // rays would reflect several times in a row from the same
-            // intersection point).
+            // rays would reflect repeatedly from the same intersection point
+            // (subject to rounding errors, though).
             if (distance >= m_minRayLength)
             {
                 if (!closestObject || distance < closestDistance)
@@ -191,7 +197,8 @@ Object * RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::getFirstIn
 template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>
 fvec3 RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::castRay(Ray ray, float intensity, uint16_t recursionDepth)
 {
-    if (intensity < m_minIntensityThreshold || recursionDepth > m_maxRecursionDepth) // Base case
+    // Stop if light intensity has decayed to insignificance, or after a fixed number of recursions.
+    if (intensity < m_minIntensityThreshold || recursionDepth > m_maxRecursionDepth)
         return m_ambientLight.colour;
 
     // Get the first object that intersects this ray
