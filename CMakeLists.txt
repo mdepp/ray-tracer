@@ -11,7 +11,6 @@ set(SOURCES ILI9341framework.cpp
             camera.cpp
             main.cpp
             plane.cpp
-            raytracer.cpp
             sdlframework.cpp
             sphere.cpp
             util.cpp

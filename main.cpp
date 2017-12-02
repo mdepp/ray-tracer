@@ -45,21 +45,6 @@ Camera cam(fw.width(), fw.height(), 10.f, 5.f);
 
 int main(int argc, char* argv[])
 {
-    /*for (int i = 1; i < argc-1; i += 2)
-    {
-        auto flag = argv[i];
-        auto val  = argv[i+1];
-
-        if (strcmp(flag, "-s") == 0)
-        {
-            randomSeed = atoi(val);
-        }
-        else if (strcmp(flag, "-r") == 0)
-        {
-            recursionDepth = atoi(val);
-        }
-    }*/
-
     util::srand();
     config::setFromFlags(argc, argv, "-s", [&](auto s) {util::srand(atol(s));}, "-r", [&](auto r) {rt.setRecursionDepth(atol(r));});
 

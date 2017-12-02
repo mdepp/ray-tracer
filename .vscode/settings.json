@@ -34,8 +34,10 @@
         "utility": "cpp"
     },
     "cSpell.words": [
+        "CMPUT",
         "arduino",
         "escape",
+        "ftrans",
         "fvec",
         "sdlk"
     ],
