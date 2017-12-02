@@ -9,20 +9,7 @@ try:
     port_name = sys.argv[1] if len(sys.argv) > 1 else 'COM3'
     file_name = sys.argv[2] if len(sys.argv) > 2 else 'img'
 
-    arduino_args = [arg.encode('utf-8') for arg in sys.argv[3:]]
-    
     with serial.Serial(port_name, 115200, timeout=1) as ser, open(file_name, 'wb') as file:
-        # Send command-line arguments
-        while ser.read() == 0:
-            pass
-        ser.write(bytes([len(arduino_args)]))
-        for arg in arduino_args:
-            while ser.read() == 0:
-                pass
-            ser.write(bytes([len(arg)]))
-            ser.write(arg)
-
-
         bar = progressbar.ProgressBar()
         for x in bar(range(IMAGE_WIDTH)):
             for y in range(IMAGE_HEIGHT):
@@ -31,7 +18,7 @@ try:
                     byte_read = ser.read()
                     if byte_read == b'\x02':
                         break
-                    print(chr(byte_read))
+                    print(byte_read.decode('utf-8'), end="")
                 # Read in image data
                 while True:
                     low = ser.read()

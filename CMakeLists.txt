@@ -8,12 +8,12 @@ set(CMAKE_LEGACY_CYGWIN_WIN32 0)
 set(CMAKE_CXX_STANDARD 14)
 
 set(SOURCES ILI9341framework.cpp
-            main.cpp
             camera.cpp
+            main.cpp
+            plane.cpp
             raytracer.cpp
             sdlframework.cpp
             sphere.cpp
-            plane.cpp
             util.cpp
             windowframework.cpp)
 
