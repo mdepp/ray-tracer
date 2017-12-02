@@ -117,7 +117,6 @@
     <ClCompile Include="ILI9341framework.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="plane.cpp" />
-    <ClCompile Include="raytracer.cpp" />
     <ClCompile Include="sdlframework.cpp" />
     <ClCompile Include="sphere.cpp" />
     <ClCompile Include="util.cpp" />
@@ -127,6 +126,7 @@
     <ClInclude Include="application.h" />
     <ClInclude Include="array.h" />
     <ClInclude Include="camera.h" />
+    <ClInclude Include="config.h" />
     <ClInclude Include="ILI9341framework.h" />
     <ClInclude Include="light.h" />
     <ClInclude Include="object.h" />
