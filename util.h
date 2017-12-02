@@ -1,14 +1,35 @@
-#pragma once
+/*
+ * File: util.h
+ * Authors: Alexander Epp (1487716) and Mitchell Epp (1498821)
+ * Project: CMPUT274 Final Project
+ * Description: Platform-agnostic utility functions.
+ */
 
 /*
- * There's a bit of a problem here since randomSeed duplicates an Arduino function name.
+ * This file contains a number of useful utilities:
+     * Standard library functions:
+     *     util::abs, util::min, util::max - redefined entirely as functions
+     *                                       within util namespace
+     *     sqrt, etc. - available as functions both on Arduino and desktop, so
+     *                  not in util namespace (although appropriate headers included).
+     *     util::forward: as in C++14, with code copied from C++ reference.
+     * 
+     * Other utilities
+     *     util::srand, util::random - random number generation.
+     *     util::debugPrint - used to display debugging information on either platform.
+     *     util::setFromFlag, util::setFromFlags - parse program parameters.
+     *     util::pow2 - function to square a number.
+     * 
  */
+
+#pragma once
 
 #ifdef ARDUINO_BUILD
 #include <Arduino.h>
 #undef abs
 #undef min
 #undef max
+
 namespace util
 {
     template <typename SetFnc>
