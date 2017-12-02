@@ -145,7 +145,6 @@ List of files and folders that should be present:
     |-- plane.cpp
     |-- plane.h
     |-- ray.h
-    |-- raytracer.cpp
     |-- raytracer.h
     |-- sdlframework.cpp
     |-- sdlframework.h
