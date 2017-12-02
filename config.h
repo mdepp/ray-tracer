@@ -1,10 +1,21 @@
+/*
+ * File: config.h
+ * Authors: Alexander Epp (1487716) and Mitchell Epp (1498821)
+ * Project: CMPUT274 Final Project
+ * Description: Loads configuration parameters. On the Arduino, this
+ *              is done by setting the ARDUINO_ARGS variable at compile
+ *              time. On a desktop machine, this is done with command-line
+ *              arguments.
+ */
 
-#include "util.h"
+#include "util.h" // for cstring functions, forward
 
 namespace config
 {
-
 #ifdef ARDUINO_BUILD
+    /*
+     * ARDUINO_ARGS is given not as a string, but as raw text, so stringify it
+     */
     #define STRINGIFY(a) XSTRINGIFY(a)
     #define XSTRINGIFY(a) #a
     #ifndef ARDUINO_ARGS
@@ -13,47 +24,92 @@ namespace config
     #define ARDUINO_ARGS_STR STRINGIFY(ARDUINO_ARGS)
     #endif
     
-    void loadArduinoArgs(int& argc, char** argv)
+    /*
+     * Loads the values from ARDUINO_ARGS_STR into argc and argv. Assumes argv has enough
+     * space for MAX_ARC strings that are MAX_ARGL characters long
+     */
+    void loadArduinoArgs(int& argc, char** argv, const int MAX_ARGC, const int MAX_ARGL)
     {
         util::debugPrint("Argument string: ", ARDUINO_ARGS_STR);
+        // Create modifiable version of ARDUINO_ARGS_STR
         char args[sizeof(ARDUINO_ARGS_STR)];
         strcpy(args, ARDUINO_ARGS_STR);
+        // argc starts at 1, to match behaviour on desktop machines where
+        // the first argument is not a command-line parameter, but rather
+        // the executable name
         argc = 1;
+        // Split args by whitespace, and load into argv
         char* pch = strtok(args, " \t");
-        while (pch != NULL)
+        while (pch != NULL && argc < MAX_ARGC)
         {
-            strcpy(argv[argc], pch);
+            // Using strncat to append to a blank argv[argc] is safer than using strcpy
+            // directly, and avoids strncpy's strange behaviour regarding null characters
+            strcpy(argv[argc], "");
+            strncat(argv[argc], pch, MAX_ARGL);
             ++ argc;
             pch = strtok(NULL, " \t");
         }
     }
 #endif
 
+    /*
+     * Searches argv for the given flag, and if it is found, call setFnc, passing
+     * in the next value in argv
+     * 
+     * Assumes argv from position 1 onward consists of paired flags and values,
+     * starting with a flag. This means that flags must be indexed by odd numbers,
+     * and values even numbers.
+     */
     template <typename SetFnc>
     void setFromFlags(int argc, char** argv, const char* flag, SetFnc&& setFnc)
     {
+        // Start at index 1
         for (int i = 1; i < argc-1; i += 2)
         {
             if (strcmp(argv[i], flag) == 0)
                 setFnc(argv[i+1]);
         }
     }
+    /*
+     * Calls the previous setFromFlags for each of a variable number of flag and setFnc
+     * pairs. If this is a desktop build, give setFromFlags argc and argv directly (as
+     * the flags are set from command-line parameters). If this is an Arduino build,
+     * instead get the flags from loadArduinoFlags
+     */
     template <typename SetFnc, typename... Args>
     void setFromFlags(int argc, char* argv[], const char* flag, SetFnc&& setFnc, Args&&... args)
     {
         #if defined(ARDUINO_BUILD) && !defined(LOADED_ARDUINO_ARGS)
-            char** local_argv = (char**)malloc(10 * sizeof(char*));
-            for (int i = 0; i < 10; ++i)
+            /*
+             * First generated function corresponds to function called by the user.
+             * TODO: this is a hack that breaks if the user calls this function twice.
+             */
+            // Allocate enough memory for 10 50-character arguments
+            const int MAX_ARGC = 10, MAX_ARGL = 50;
+            char** local_argv = (char**)malloc(MAX_ARGC * sizeof(char*));
+            for (int i = 0; i < MAX_ARGC; ++i)
             {
-                local_argv[i] = (char*)malloc(50 * sizeof(char));
+                local_argv[i] = (char*)malloc(MAX_ARGL * sizeof(char));
             }
-            loadArduinoArgs(argc, local_argv);
+            // Load data into argc and local_argv
+            loadArduinoArgs(argc, local_argv, MAX_ARGC, MAX_ARGL);
+            // argc and local_argv are now set equivalently to how they would be in a
+            // desktop environment.
+            // Call above setFromFlags function, on the first flag-setFnc pair
             setFromFlags(argc, local_argv, flag, util::forward<SetFnc>(setFnc));
+            // Recursively call this function so that the above statement gets called
+            // on all flag-setFnc pairs. If args contains only one pair, this line
+            // automatically calls the single-pair version
             setFromFlags(argc, local_argv, util::forward<Args>(args)...);
+            // Free allocated memory. I'm about 80% certain a single call works
             free(local_argv);
             #define LOADED_ARDUINO_ARGS
         #else
+            // Call above setFromFlags function, on the first flag-setFnc pair
             setFromFlags(argc, argv, flag, util::forward<SetFnc>(setFnc));
+            // Recursively call this function so that the above statement gets called
+            // on all flag-setFnc pairs. If args contains only one pair, this line
+            // automatically calls the single-pair version
             setFromFlags(argc, argv, util::forward<Args>(args)...);
         #endif
     }
