@@ -17,7 +17,6 @@
      * Other utilities
      *     util::srand, util::random - random number generation.
      *     util::debugPrint - used to display debugging information on either platform.
-     *     util::setFromFlag, util::setFromFlags - parse program parameters.
      *     util::pow2 - function to square a number.
      * 
  */
