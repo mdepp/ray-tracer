@@ -21,16 +21,18 @@
 // potentially catching memory errors at build time.
 
 // Geometry to be rendered
-Sphere s1(fvec3(0.f, 0.f, 13.f), 2.f, fvec3(1.f, 1.f, 1.f), 0.5f, 0.0);
-Sphere s2(fvec3(0.f, -3.f, 13.f), 1.f, fvec3(1.f, 0.f, 0.f), 0.1f, 0.5);
-Sphere s3(fvec3(2.f, -2.f, 10.f), 2.f, fvec3(0.0f, 0.3f, 1.f), 0.0f, 0.8, 1.003);
+Sphere s01(fvec3(0.f, 0.f, 13.f), 2.f, fvec3(1.f, 1.f, 1.f), 0.5f, 0.0);
+Sphere s02(fvec3(0.f, -3.f, 13.f), 1.f, fvec3(1.f, 0.f, 0.f), 0.1f, 0.5);
+Sphere s03(fvec3(2.f, -2.f, 10.f), 2.f, fvec3(0.0f, 0.3f, 1.f), 0.0f, 0.8, 1.003);
+Plane p01(fvec3(12.f, 0.f, 0.f), fvec3(-1.f, 0.f, 0.f), fvec3(1.f, 1.f, 1.f), 0.0f, 0);
+Plane p02(fvec3(-12.f, 0.f, 0.f), fvec3(1.f, 0.f, 0.f), fvec3(1.f, 1.f, 1.f), 0.0f, 0);
+Plane p03(fvec3(0.f, 12.f, 0.f), fvec3(0.f, -1.f, 0.f), fvec3(1.f, 1.f, 1.f), 0.0f, 0);
+Plane p04(fvec3(0.f, -12.f, 0.f), fvec3(0.f, 1.f, 0.f), fvec3(1.f, 1.f, 1.f), 0.0f, 0);
+Plane p05(fvec3(0.f, 0.f, -2.f), fvec3(0.f, 0.f, 1.f), fvec3(1.f, 1.f, 1.f),  0.7f, 0);
+Plane p06(fvec3(0.f, 0.f, 22.f), fvec3(0.f, 0.f, -1.f), fvec3(1.f, 1.f, 1.f), 0.7f, 0);
 
-Plane p1(fvec3(12.f, 0.f, 0.f), fvec3(-1.f, 0.f, 0.f), fvec3(1.f, 1.f, 1.f), 0.0f, 0);
-Plane p2(fvec3(-12.f, 0.f, 0.f), fvec3(1.f, 0.f, 0.f), fvec3(1.f, 1.f, 1.f), 0.0f, 0);
-Plane p3(fvec3(0.f, 12.f, 0.f), fvec3(0.f, -1.f, 0.f), fvec3(1.f, 1.f, 1.f), 0.0f, 0);
-Plane p4(fvec3(0.f, -12.f, 0.f), fvec3(0.f, 1.f, 0.f), fvec3(1.f, 1.f, 1.f), 0.0f, 0);
-Plane p5(fvec3(0.f, 0.f, -2.f), fvec3(0.f, 0.f, -1.f), fvec3(1.f, 1.f, 1.f),  0.7f, 0);
-Plane p6(fvec3(0.f, 0.f, 22.f), fvec3(0.f, 0.f, 1.f), fvec3(1.f, 1.f, 1.f), 0.7f, 0);
+Sphere s11(fvec3(0.f, 0.f, 13.f), 2.f, fvec3(1.f, 1.f, 1.f), 0.0f, 0.0);
+Plane p11(fvec3(0.f, 0.f, 15.f), fvec3(0.f, 0.f, -1.f), fvec3(1.f, 1.f, 1.f), 0.0f, 0);
 
 // Window/event management
 Application fw;
@@ -43,49 +45,84 @@ RayTracer<10, 15, 10> rt(10);
 // Camera
 Camera cam(fw.width(), fw.height(), 10.f, 5.f);
 
+void initScene(int);
+
 int main(int argc, char* argv[])
 {
     util::srand();
+    int scene = 0;
     config::setFromFlags(argc, argv,
         "-s", [&](const char* s) -> void {util::srand(atol(s));},
-        "-r", [&](const char* r) -> void {rt.setRecursionDepth(atol(r));}
+        "-r", [&](const char* r) -> void {rt.setRecursionDepth(atol(r));},
+        "-sc", [&](const char* sc) -> void {scene = atol(sc);}
     );
 
-    // Camera is at (-10, -10, 0), looking at (0, 0, 10)
-    cam.lookAt({ -10, -10, 0}, { 0, 0, 10 });
+    util::debugPrint("Building scene");
+    initScene(scene);
 
     // Clear the screen in preparation of drawing
     util::debugPrint("Clearing");
     fw.clear({0.f, 0.f, 0.f});
-
-    // Add objects to scene
-    util::debugPrint("Adding objects");
-    rt.addObject(&s1);
-    rt.addObject(&s2);
-    rt.addObject(&s3);
-    rt.addObject(&p1);
-    rt.addObject(&p2);
-    rt.addObject(&p3);
-    rt.addObject(&p4);
-    rt.addObject(&p5);
-    rt.addObject(&p6);
-
-    // Create random lights, and add them to the scene
-    for (int i = 0; i < 15; ++i)
-    {
-        fvec3 pos(util::random(20)-10, util::random(20)-10, util::random(20));
-        rt.addPointLight(pos, 30.f, fvec3((util::random(100)/100.f), (util::random(100)/100.f), (util::random(100)/100.f)));
-    }
 
     // Draw scene
     util::debugPrint("Drawing objects");
     if (!rt.render(&fw, &cam)) return 0;
 
     // Idle
-    util::debugPrint("Finshed drawing");
+    util::debugPrint("Finished drawing");
     bool running = true;
     while (running)
         running = fw.idle();
 
     return 0;
+}
+
+void initScene(int scene)
+{
+    // Camera is at (-10, -10, 0), looking at (0, 0, 10)
+    cam.lookAt({ -10, -10, 0}, { 0, 0, 10 });
+
+    if (scene == 0 || scene == 2)
+    {
+        if (scene == 2)
+        {
+            cam.lookAt({0, 0, 0}, { 0, 0, 10 });
+        }
+        // Add objects to scene
+        rt.addObject(&s01);
+        rt.addObject(&s02);
+        rt.addObject(&s03);
+        rt.addObject(&p01);
+        rt.addObject(&p02);
+        rt.addObject(&p03);
+        rt.addObject(&p04);
+        rt.addObject(&p05);
+        rt.addObject(&p06);
+
+        // Create random lights, and add them to the scene
+        for (int i = 0; i < 15; ++i)
+        {
+            fvec3 pos(util::random(20)-10, util::random(20)-10, util::random(20));
+            rt.addPointLight(pos, 30.f, fvec3((util::random(100)/100.f), (util::random(100)/100.f), (util::random(100)/100.f)));
+        }
+    }
+    else if (scene == 1)
+    {
+        rt.addObject(&s11);
+        rt.addObject(&p11);
+        
+        rt.addDirectionalLight(
+            normalize(fvec3(1.f, 0.f, 1.f)),
+            fvec3(.5f, .5f, .5f)
+        );
+
+        rt.setAmbientLight(
+            fvec3(0.3f, 0.3f, 0.3f)
+        );
+    }
+    else
+    {
+        util::debugPrint("Unrecognized scene: ", scene, " -- reverting to scene 0");
+        initScene(0);
+    }
 }

@@ -97,6 +97,12 @@ private:
      */
     RefractionData refractRay(Ray ray, fvec3 normal, float refractiveIndex);
 
+    /*
+     * Tests if the given point is in the given light's shadow
+     */
+    bool isShadowed(const PointLight& light, fvec3 pos);
+    bool isShadowed(const DirectionalLight& light, fvec3 pos);
+
     fvec3 m_backgroundColour;
     const float m_minIntensityThreshold; // Stop recursing once light intensity is below this threshold
     uint16_t m_maxRecursionDepth;
@@ -132,22 +138,37 @@ RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::~RayTracer()
 }
 
 template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>
+bool RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::isShadowed(const PointLight& light, fvec3 pos)
+{
+    for (auto object : m_objects)
+    {
+        auto toLight = light.position - pos;
+        auto distance = object->intersect({ pos, normalize(toLight) }, nullptr, m_minRayLength);
+        if (distance > 0 && distance < (toLight.length() - m_minRayLength)) // Collision is between light and object
+        {
+            return true;
+        }
+    }
+    return false;
+};
+
+template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>
+bool RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::isShadowed(const DirectionalLight& light, fvec3 pos)
+{
+    for (auto object : m_objects)
+    {
+        auto distance = object->intersect({ pos, -light.direction }, nullptr, m_minRayLength);
+        if (distance > 0)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>
 fvec3 RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::getLighting(fvec3 point, fvec3 normal)
 {
-    auto isShadowed = [this](const PointLight& light, fvec3 pos) -> bool
-    {
-        for (auto object : m_objects)
-        {
-            auto toLight = light.position - pos;
-            auto distance = object->intersect({ pos, normalize(toLight) }, nullptr, m_minRayLength);
-            if (distance > 0 && distance < (toLight.length() - m_minRayLength)) // Collision is between light and object
-            {
-                return true;
-            }
-        }
-        return false;
-    };
-
     fvec3 total(0.f, 0.f, 0.f);
     for (auto& light : m_pointLights)
     {
@@ -165,7 +186,8 @@ fvec3 RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::getLighting(f
     }
     for (auto& light : m_directionalLights)
     {
-        total += light.colour * util::max(dot(normal, light.direction), 0.f);
+        if (!isShadowed(light, point))
+            total += light.colour * util::max(dot(normal, -light.direction), 0.f);
     }
     total += m_ambientLight.colour;
 
@@ -256,14 +278,16 @@ fvec3 RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::castRay(Ray r
 {
     // Stop if light intensity has decayed to insignificance, or after a fixed number of recursions.
     if (intensity < m_minIntensityThreshold || recursionDepth > m_maxRecursionDepth)
-        return m_ambientLight.colour;
+        //return m_ambientLight.colour;
+        return fvec3(0.f, 0.f, 0.f);
 
     // Get the first object that intersects this ray
     auto intersectingObject = getFirstIntersection(ray);
 
     // Stop if no intersection took place
     if (!intersectingObject)
-        return m_ambientLight.colour;
+        //return m_ambientLight.colour;
+        return fvec3(0.f, 0.f, 0.f);
 
     // Get detailed information of the intersection
     IntersectionData id;
