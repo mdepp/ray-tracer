@@ -17,7 +17,7 @@ public:
      * Init plane. 'normal' does not have to be normalized.
      */
     Plane(fvec3 origin, fvec3 normal, fvec3 colour, float reflectionCoefficient);
-    float intersect(Ray ray, IntersectionData* intersectionData) override;
+    float intersect(Ray ray, IntersectionData* intersectionData, float epsilon) override;
 
 private:
     fvec3 m_origin;

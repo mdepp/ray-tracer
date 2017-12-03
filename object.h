@@ -41,5 +41,5 @@ public:
      * populate 'intersectionData' with the attributes of the first such
      * intersection.
      */
-    virtual float intersect(Ray ray, IntersectionData* intersectionData) = 0;
+    virtual float intersect(Ray ray, IntersectionData* intersectionData, float epsilon) = 0;
 };

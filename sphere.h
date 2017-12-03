@@ -14,7 +14,7 @@ class Sphere : public Object
 {
 public:
     Sphere(fvec3 center, float radius, fvec3 colour, float reflectionCoefficient);
-    float intersect(Ray ray, IntersectionData* intersectionData) override;
+    float intersect(Ray ray, IntersectionData* intersectionData, float epsilon) override;
 
 private:
     fvec3 m_center;

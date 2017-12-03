@@ -176,12 +176,10 @@ Object * RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::getFirstIn
     {
         if (object) // Only consider used objects
         {
-            auto distance = object->intersect(ray, nullptr);
-            
-            // Objects must be a certain distance from ray origin (otherwise
-            // rays would reflect repeatedly from the same intersection point
-            // (subject to rounding errors, though).
-            if (distance >= m_minRayLength)
+            // Get first intersection with object beyond minRayLength
+            auto distance = object->intersect(ray, nullptr, m_minRayLength);
+
+            if (distance > 0) // An intersection was found
             {
                 if (!closestObject || distance < closestDistance)
                 {
@@ -210,7 +208,7 @@ fvec3 RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::castRay(Ray r
 
     // Get detailed information of the intersection
     IntersectionData id;
-    if (intersectingObject->intersect(ray, &id) < 0)
+    if (intersectingObject->intersect(ray, &id, m_minRayLength) < 0)
         util::debugPrint("castRay() could not find an intersection for supposedly intersecting object.");
 
     // Calculate reflected ray

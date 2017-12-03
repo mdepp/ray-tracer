@@ -22,8 +22,8 @@
 
 // Geometry to be rendered
 Sphere s1(fvec3(0.f, 0.f, 13.f), 2.f, fvec3(1.f, 1.f, 1.f), 0.7f);
-Sphere s2(fvec3(0.f, -3.f, 13.f), 1.f, fvec3(1.f, 0.f, 0.f), 0.1f);
-Sphere s3(fvec3(3.f, -2.f, 14.f), 2.f, fvec3(0.0f, 0.3f, 1.f), 0.03f);
+Sphere s2(fvec3(0.f, -3.f, 13.f), 1.f, fvec3(1.f, 0.f, 0.f), 0.7f);
+Sphere s3(fvec3(3.f, -2.f, 14.f), 2.f, fvec3(0.0f, 0.3f, 1.f), 0.7f);
 
 Plane p1(fvec3(12.f, 0.f, 0.f), fvec3(-1.f, 0.f, 0.f), fvec3(1.f, 1.f, 1.f), 0.0f);
 Plane p2(fvec3(-12.f, 0.f, 0.f), fvec3(1.f, 0.f, 0.f), fvec3(1.f, 1.f, 1.f), 0.0f);
@@ -60,12 +60,12 @@ int main(int argc, char* argv[])
     rt.addObject(&s1);
     rt.addObject(&s2);
     rt.addObject(&s3);
-    rt.addObject(&p1);
-    rt.addObject(&p2);
-    rt.addObject(&p3);
+    //rt.addObject(&p1);
+    //rt.addObject(&p2);
+    //rt.addObject(&p3);
     rt.addObject(&p4);
-    rt.addObject(&p5);
-    rt.addObject(&p6);
+    //rt.addObject(&p5);
+    //rt.addObject(&p6);
 
     // Create random lights, and add them to the scene
     for (int i = 0; i < 15; ++i)

@@ -19,7 +19,7 @@ Plane::Plane(fvec3 origin, fvec3 normal, fvec3 colour, float reflectionCoefficie
 {
 
 }
-float Plane::intersect(Ray ray, IntersectionData* intersectionData)
+float Plane::intersect(Ray ray, IntersectionData* intersectionData, float epsilon)
 {
     // https://en.wikipedia.org/wiki/Line%E2%80%93plane_intersection
     auto dotProduct = dot(m_normal, ray.dir);
@@ -30,12 +30,19 @@ float Plane::intersect(Ray ray, IntersectionData* intersectionData)
     }
 
     auto distance = dot(m_origin - ray.origin, m_normal) / dotProduct;
-    if (distance > 0 && intersectionData)
+    if (distance > epsilon)
     {
-      intersectionData->intersection = ray.origin + ray.dir*distance;
-      intersectionData->colour = m_colour;
-      intersectionData->normal = m_normal;
-      intersectionData->reflectionCoefficient = m_reflectionCoefficient;
+        if (intersectionData)
+        {
+            intersectionData->intersection = ray.origin + ray.dir*distance;
+            intersectionData->colour = m_colour;
+            intersectionData->normal = m_normal;
+            intersectionData->reflectionCoefficient = m_reflectionCoefficient;
+        }
+        return distance;
     }
-    return distance;
+    else
+    {
+        return -1;
+    }
 }

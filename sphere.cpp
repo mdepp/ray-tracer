@@ -18,30 +18,29 @@ Sphere::Sphere(fvec3 center, float radius, fvec3 colour, float reflectionCoeffic
 }
 
 /*
- * Returns the least non-negative number among 'first' and 'second'. If both
- * are negative, returns a negative result (but not necessarily either number).
+ * Returns the least number greater than epsilon among 'first' and 'second'. If both
+ * are are less than epsilon, returns a negative result (but not necessarily either number).
  */
-static float findLeastNonNegative(float first, float second)
+static float findLeastGreaterThan(float first, float second, float epsilon)
 {
-    if (first < second) return findLeastNonNegative(second, first);
+    if (first < second) return findLeastGreaterThan(second, first, epsilon);
     
     // Now first >= second
-    if (first < 0) // Neither first nor second are non-negative
+    if (first < epsilon) // Neither first nor second are greater
     {
-        // Could return first or second, but this should lead to less rounding errors
         return -1;
     }
-    else if (second >= 0) // Both first and second are non-negative
+    else if (second >= epsilon) // Both first and second are greater
     {
         return second;
     }
-    else // Second is negative but not first
+    else // Second is less but not first
     {
         return first;
     }
 }
 
-float Sphere::intersect(Ray ray, IntersectionData* intersectionData)
+float Sphere::intersect(Ray ray, IntersectionData* intersectionData, float epsilon)
 {
     // As described in https://en.wikipedia.org/wiki/Line–sphere_intersection
     auto discriminant = util::pow2(dot(ray.dir, ray.origin-m_center))
@@ -52,7 +51,7 @@ float Sphere::intersect(Ray ray, IntersectionData* intersectionData)
     auto term1 = -dot(ray.dir, ray.origin-m_center);
     if (discriminant == 0) // Intersects once with sphere
     {
-        if (term1 >= 0) // Intersects in from of ray
+        if (term1 >= epsilon) // Intersects in from of ray
         {
             if (intersectionData)
             {
@@ -72,7 +71,7 @@ float Sphere::intersect(Ray ray, IntersectionData* intersectionData)
     {
         auto term2 = sqrt(discriminant);
 
-        auto length = findLeastNonNegative(term1+term2, term1-term2);
+        auto length = findLeastGreaterThan(term1+term2, term1-term2, epsilon);
         if (length < 0) // Both intersections are behind ray
         {
             return -1;
