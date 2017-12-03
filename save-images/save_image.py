@@ -18,7 +18,7 @@ try:
                     byte_read = ser.read()
                     if byte_read == b'\x02':
                         break
-                    print(byte_read.decode('utf-8'), end="")
+                    print(byte_read.decode('utf-8', errors='ignore'), end='')
                 # Read in image data
                 while True:
                     low = ser.read()
