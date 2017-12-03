@@ -8,6 +8,8 @@ Credits and Code Re-use
 There are several instances in which code or algorithms from other sources have
 been used. Each instance is acknowledged in the source code (typically with a link)
  * Object/ray intersection algorithms were taken from Wikipedia
+ * The vector form of Snell's Law (for ray refraction calculations) was from
+   "An Improved Illumination Model for Shaded Display" (1980), by Turner Whitted
  * Example source of several standard library functions was used from a few
    different sources
  * Code for reading random numbers from Arduino analog pins was originally from

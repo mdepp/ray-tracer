@@ -181,6 +181,10 @@ Ray RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::reflectRay(Ray 
 template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>
 RefractionData RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::refractRay(Ray ray, fvec3 normal, float refractiveIndex)
 {
+    // This algorithm is as described in "An Improved Illumination Model for
+    // Shaded Display" (published 1980) by Turner Whitted, last accessed
+    // December 2017 at https://pdfs.semanticscholar.org/78e7/620a01ecaecc62b00bf47f86c6822e3d9625.pdf
+    
     auto v_dot_n = dot(ray.dir, normal);
     if (v_dot_n == 0) // Ray is parallel to surface, so there is no refraction
     {
