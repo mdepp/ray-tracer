@@ -21,9 +21,9 @@
 // potentially catching memory errors at build time.
 
 // Geometry to be rendered
-Sphere s1(fvec3(0.f, 0.f, 13.f), 2.f, fvec3(1.f, 1.f, 1.f), 0.0f, 0.5);
+Sphere s1(fvec3(0.f, 0.f, 13.f), 2.f, fvec3(1.f, 1.f, 1.f), 0.5f, 0.0);
 Sphere s2(fvec3(0.f, -3.f, 13.f), 1.f, fvec3(1.f, 0.f, 0.f), 0.1f, 0.5);
-Sphere s3(fvec3(2.f, -2.f, 10.f), 2.f, fvec3(0.0f, 0.3f, 1.f), 0.1f, 0.8);
+Sphere s3(fvec3(2.f, -2.f, 10.f), 2.f, fvec3(0.0f, 0.3f, 1.f), 0.0f, 0.8, 1.003);
 
 Plane p1(fvec3(12.f, 0.f, 0.f), fvec3(-1.f, 0.f, 0.f), fvec3(1.f, 1.f, 1.f), 0.0f, 0);
 Plane p2(fvec3(-12.f, 0.f, 0.f), fvec3(1.f, 0.f, 0.f), fvec3(1.f, 1.f, 1.f), 0.0f, 0);

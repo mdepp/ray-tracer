@@ -275,7 +275,7 @@ fvec3 RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::castRay(Ray r
     auto reflectionCoefficient = id.reflectionCoefficient;
 
     // Calculate refracted ray
-    auto refractionData = refractRay({ id.intersection, ray.dir }, id.normal, 1.02f);
+    auto refractionData = refractRay({ id.intersection, ray.dir }, id.normal, id.refractiveIndex);
     auto refractedRay = refractionData.ray;
     auto transmissionCoefficient = id.transmissionCoefficient;
     if (refractionData.tir) // Total internal reflection
