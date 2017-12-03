@@ -13,7 +13,7 @@
 class Sphere : public Object
 {
 public:
-    Sphere(fvec3 center, float radius, fvec3 colour, float reflectionCoefficient, float transmissionCoefficient);
+    Sphere(fvec3 center, float radius, fvec3 colour, float reflectionCoefficient, float transmissionCoefficient=0.f, float refractiveIndex=1.f);
     float intersect(Ray ray, IntersectionData* intersectionData, float epsilon) override;
 
 private:
@@ -21,4 +21,5 @@ private:
     float m_radius;
     fvec3 m_colour;
     float m_reflectionCoefficient, m_transmissionCoefficient;
+    float m_refractiveIndex;
 };

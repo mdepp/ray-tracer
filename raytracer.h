@@ -98,6 +98,11 @@ private:
      */
     Ray reflectRay(Ray ray, fvec3 normal);
 
+    /*
+     * Refract a ray from a normal (double-sided)
+     */
+    RefractionData refractRay(Ray ray, fvec3 normal, float refractiveIndex);
+
     fvec3 m_backgroundColour;
     const float m_minIntensityThreshold; // Stop recursing once light intensity is below this threshold
     uint16_t m_maxRecursionDepth;
@@ -127,6 +132,20 @@ RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::~RayTracer()
 template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>
 fvec3 RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::getLighting(fvec3 point, fvec3 normal)
 {
+    auto isShadowed = [this](const PointLight& light, fvec3 pos) -> bool
+    {
+        for (auto object : m_objects)
+        {
+            auto toLight = light.position - pos;
+            auto distance = object->intersect({ pos, normalize(toLight) }, nullptr, m_minRayLength);
+            if (distance > 0 && distance < (toLight.length() - m_minRayLength)) // Collision is between light and object
+            {
+                return true;
+            }
+        }
+        return false;
+    };
+
     fvec3 total(0.f, 0.f, 0.f);
     for (auto& light : m_pointLights)
     {
@@ -139,7 +158,8 @@ fvec3 RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::getLighting(f
         // (direction in which the surface normal points). Since a 2D object
         // (such as a plane) can be viewed from both sides, *both* sides will be
         // lit, but only by lights from *one* side.
-        total += light.colour * util::max(dot(normal, dir), 0.f) * util::min(light.intensity / diff.length2(), 1.f);
+        if (!isShadowed(light, point))
+            total += light.colour * util::max(dot(normal, dir), 0.f) * util::min(light.intensity / diff.length2(), 1.f);
     }
     for (auto& light : m_directionalLights)
     {
@@ -157,6 +177,31 @@ Ray RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::reflectRay(Ray 
         return { ray.origin, -reflectNormalized(ray.dir, normal) };
     else
         return { ray.origin, -reflectNormalized(ray.dir, -normal) };
+}
+template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>
+RefractionData RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::refractRay(Ray ray, fvec3 normal, float refractiveIndex)
+{
+    auto v_dot_n = dot(ray.dir, normal);
+    if (v_dot_n == 0) // Ray is parallel to surface, so there is no refraction
+    {
+        return { ray, false };
+    }
+    else if (v_dot_n > 0) // Ray is leaving object, so flip normal and index of refraction
+    {
+        v_dot_n = -v_dot_n;
+        normal = -normal;
+        refractiveIndex = 1.f / refractiveIndex;
+    }
+
+    auto v_prime = -ray.dir / v_dot_n; // V' = V/|V.N|
+    auto radicand = util::pow2(refractiveIndex)*v_prime.length2() - (v_prime + normal).length2(); // k_n^2 |V'|^2 - |V'+N|^2
+    if (radicand <= 0) // Total internal reflection
+    {
+        return { ray, true };
+    }
+    auto k_f = 1.f / sqrt(radicand); // (k_n^2 |V'|^2 - |V'+N|^2)^(-1/2)
+    auto refractedRay = Ray(ray.origin, normalize((normal + v_prime)*k_f - normal)); // k_f (N+V') - N
+    return { refractedRay, false };
 }
 
 template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>
@@ -224,35 +269,10 @@ fvec3 RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::castRay(Ray r
     auto reflectionCoefficient = id.reflectionCoefficient;
 
     // Calculate refracted ray
-    auto refractRay = [this](Ray ray, fvec3 normal, float refractiveIndex) -> RefractionData
-    {
-        auto v_dot_n = dot(ray.dir, normal);
-        if (v_dot_n == 0) // Parallel
-        {
-            return { ray, false };
-        }
-        else if (v_dot_n > 0) // Ray leaving object
-        {
-            v_dot_n = -v_dot_n;
-            normal = -normal;
-            refractiveIndex = 1.f / refractiveIndex;
-        }
-
-        auto v_prime = -ray.dir / v_dot_n;
-        auto radicand = util::pow2(refractiveIndex)*v_prime.length2() - (v_prime + normal).length2();
-        if (radicand <= 0) // Total internal reflection
-        {
-            return { ray, true };
-        }
-        auto k_f = 1.f / sqrt(radicand);
-        auto refractedRay = Ray(ray.origin, normalize((normal + v_prime)*k_f - normal));
-        return { refractedRay, false };
-    };
-
     auto refractionData = refractRay({ id.intersection, ray.dir }, id.normal, 1.02f);
     auto refractedRay = refractionData.ray;
     auto transmissionCoefficient = id.transmissionCoefficient;
-    if (refractionData.tir)
+    if (refractionData.tir) // Total internal reflection
     {
         reflectionCoefficient += transmissionCoefficient;
         transmissionCoefficient = 0;
@@ -262,7 +282,7 @@ fvec3 RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::castRay(Ray r
     auto diffuseCoefficient = 1.f - reflectionCoefficient - transmissionCoefficient;
     auto diffuseLighting = getLighting(id.intersection, id.normal);
 
-    // Cast the reflected ray
+    // Cast the reflected and refracted rays
     return diffuseLighting*id.colour*diffuseCoefficient
         + castRay(reflectedRay, intensity*reflectionCoefficient, recursionDepth + 1)*reflectionCoefficient
         + castRay(refractedRay, intensity*transmissionCoefficient, recursionDepth + 1)*transmissionCoefficient;

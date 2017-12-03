@@ -21,7 +21,7 @@
 // potentially catching memory errors at build time.
 
 // Geometry to be rendered
-Sphere s1(fvec3(0.f, 0.f, 13.f), 2.f, fvec3(1.f, 1.f, 1.f), 0.0f, 0.999);
+Sphere s1(fvec3(0.f, 0.f, 13.f), 2.f, fvec3(1.f, 1.f, 1.f), 0.0f, 0.5);
 Sphere s2(fvec3(0.f, -3.f, 13.f), 1.f, fvec3(1.f, 0.f, 0.f), 0.1f, 0.5);
 Sphere s3(fvec3(2.f, -2.f, 10.f), 2.f, fvec3(0.0f, 0.3f, 1.f), 0.1f, 0.8);
 
@@ -49,7 +49,7 @@ int main(int argc, char* argv[])
     config::setFromFlags(argc, argv, "-s", [&](auto s) {util::srand(atol(s));}, "-r", [&](auto r) {rt.setRecursionDepth(atol(r));});
 
     // Camera is at (-10, -10, 0), looking at (0, 0, 10)
-    cam.lookAt({ -0, -0, 0}, { 0, 0, 10 });
+    cam.lookAt({ -10, -10, 0}, { 0, 0, 10 });
 
     // Clear the screen in preparation of drawing
     util::debugPrint("Clearing");

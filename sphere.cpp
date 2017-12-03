@@ -10,12 +10,13 @@
 #include "util.h"
 #include "vec.h"
 
-Sphere::Sphere(fvec3 center, float radius, fvec3 colour, float reflectionCoefficient, float transmissionCoefficient)
+Sphere::Sphere(fvec3 center, float radius, fvec3 colour, float reflectionCoefficient, float transmissionCoefficient, float refractiveIndex)
     : Object(),
       m_center(center), m_radius(radius),
       m_colour(colour),
       m_reflectionCoefficient(reflectionCoefficient),
-      m_transmissionCoefficient(transmissionCoefficient)
+      m_transmissionCoefficient(transmissionCoefficient),
+      m_refractiveIndex(refractiveIndex)
 {
 }
 
@@ -62,6 +63,7 @@ float Sphere::intersect(Ray ray, IntersectionData* intersectionData, float epsil
                 intersectionData->normal = normalize(intersectionData->intersection - m_center);
                 intersectionData->reflectionCoefficient = m_reflectionCoefficient;
                 intersectionData->transmissionCoefficient = m_transmissionCoefficient;
+                intersectionData->refractiveIndex = m_refractiveIndex;
             }
             return term1;
         }
@@ -88,6 +90,7 @@ float Sphere::intersect(Ray ray, IntersectionData* intersectionData, float epsil
                 intersectionData->normal = normalize(intersectionData->intersection - m_center);
                 intersectionData->reflectionCoefficient = m_reflectionCoefficient;
                 intersectionData->transmissionCoefficient = m_transmissionCoefficient;
+                intersectionData->refractiveIndex = m_refractiveIndex;
             }
             return length;
         }

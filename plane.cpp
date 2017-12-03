@@ -10,13 +10,14 @@
 #include "util.h"
 #include "vec.h"
 
-Plane::Plane(fvec3 origin, fvec3 normal, fvec3 colour, float reflectionCoefficient, float transmissionCoefficient)
+Plane::Plane(fvec3 origin, fvec3 normal, fvec3 colour, float reflectionCoefficient, float transmissionCoefficient, float refractiveIndex)
   : Object(),
     m_origin(origin),
     m_normal(normalize(normal)),
     m_colour(colour),
     m_reflectionCoefficient(reflectionCoefficient),
-    m_transmissionCoefficient(transmissionCoefficient)
+    m_transmissionCoefficient(transmissionCoefficient),
+    m_refractiveIndex(refractiveIndex)
 {
 
 }
@@ -40,6 +41,7 @@ float Plane::intersect(Ray ray, IntersectionData* intersectionData, float epsilo
             intersectionData->normal = m_normal;
             intersectionData->reflectionCoefficient = m_reflectionCoefficient;
             intersectionData->transmissionCoefficient = m_transmissionCoefficient;
+            intersectionData->refractiveIndex = m_refractiveIndex;
         }
         return distance;
     }
