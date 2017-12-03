@@ -159,3 +159,4 @@ List of files and folders that should be present:
     |-- CMakeLists.txt
     |-- Makefile
     |-- README
+    |-- update_config.sh
