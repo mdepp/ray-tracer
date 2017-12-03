@@ -27,6 +27,8 @@ struct IntersectionData
     fvec3 colour;
     fvec3 normal;
     float reflectionCoefficient;
+    float transmissionCoefficient;
+    float refractiveIndex;
 };
 
 class Object

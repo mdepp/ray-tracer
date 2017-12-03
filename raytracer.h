@@ -15,6 +15,14 @@
 #include "vec.h"
 #include "camera.h"
 
+struct RefractionData
+{
+    RefractionData(Ray r, bool t)
+        : ray(r), tir(t) {}
+    Ray ray;
+    bool tir; // total internal reflection
+};
+
 template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>
 class RayTracer
 {
@@ -213,14 +221,51 @@ fvec3 RayTracer<NumObjects, NumPointLights, NumDirectionalLights>::castRay(Ray r
 
     // Calculate reflected ray
     auto reflectedRay = reflectRay({ id.intersection, ray.dir }, id.normal);
-    auto reflectedIntensity = intensity*id.reflectionCoefficient;
-    
-    // Calculate diffuse lighting at reflection point
-    auto lighting = getLighting(id.intersection, id.normal);
+    auto reflectionCoefficient = id.reflectionCoefficient;
+
+    // Calculate refracted ray
+    auto refractRay = [this](Ray ray, fvec3 normal, float refractiveIndex) -> RefractionData
+    {
+        auto v_dot_n = dot(ray.dir, normal);
+        if (v_dot_n == 0) // Parallel
+        {
+            return { ray, false };
+        }
+        else if (v_dot_n > 0) // Ray leaving object
+        {
+            v_dot_n = -v_dot_n;
+            normal = -normal;
+            refractiveIndex = 1.f / refractiveIndex;
+        }
+
+        auto v_prime = -ray.dir / v_dot_n;
+        auto radicand = util::pow2(refractiveIndex)*v_prime.length2() - (v_prime + normal).length2();
+        if (radicand <= 0) // Total internal reflection
+        {
+            return { ray, true };
+        }
+        auto k_f = 1.f / sqrt(radicand);
+        auto refractedRay = Ray(ray.origin, normalize((normal + v_prime)*k_f - normal));
+        return { refractedRay, false };
+    };
+
+    auto refractionData = refractRay({ id.intersection, ray.dir }, id.normal, 1.02f);
+    auto refractedRay = refractionData.ray;
+    auto transmissionCoefficient = id.transmissionCoefficient;
+    if (refractionData.tir)
+    {
+        reflectionCoefficient += transmissionCoefficient;
+        transmissionCoefficient = 0;
+    }
+
+    // Calculate diffuse lighting
+    auto diffuseCoefficient = 1.f - reflectionCoefficient - transmissionCoefficient;
+    auto diffuseLighting = getLighting(id.intersection, id.normal);
 
     // Cast the reflected ray
-    return lighting*id.colour*(1.f - id.reflectionCoefficient)
-        + castRay(reflectedRay, reflectedIntensity, recursionDepth+1)*id.reflectionCoefficient;
+    return diffuseLighting*id.colour*diffuseCoefficient
+        + castRay(reflectedRay, intensity*reflectionCoefficient, recursionDepth + 1)*reflectionCoefficient
+        + castRay(refractedRay, intensity*transmissionCoefficient, recursionDepth + 1)*transmissionCoefficient;
 }
 
 template<uint16_t NumObjects, uint16_t NumPointLights, uint16_t NumDirectionalLights>

@@ -21,16 +21,16 @@
 // potentially catching memory errors at build time.
 
 // Geometry to be rendered
-Sphere s1(fvec3(0.f, 0.f, 13.f), 2.f, fvec3(1.f, 1.f, 1.f), 0.7f);
-Sphere s2(fvec3(0.f, -3.f, 13.f), 1.f, fvec3(1.f, 0.f, 0.f), 0.7f);
-Sphere s3(fvec3(3.f, -2.f, 14.f), 2.f, fvec3(0.0f, 0.3f, 1.f), 0.7f);
+Sphere s1(fvec3(0.f, 0.f, 13.f), 2.f, fvec3(1.f, 1.f, 1.f), 0.0f, 0.999);
+Sphere s2(fvec3(0.f, -3.f, 13.f), 1.f, fvec3(1.f, 0.f, 0.f), 0.1f, 0.5);
+Sphere s3(fvec3(2.f, -2.f, 10.f), 2.f, fvec3(0.0f, 0.3f, 1.f), 0.1f, 0.8);
 
-Plane p1(fvec3(12.f, 0.f, 0.f), fvec3(-1.f, 0.f, 0.f), fvec3(1.f, 1.f, 1.f), 0.0f);
-Plane p2(fvec3(-12.f, 0.f, 0.f), fvec3(1.f, 0.f, 0.f), fvec3(1.f, 1.f, 1.f), 0.0f);
-Plane p3(fvec3(0.f, 12.f, 0.f), fvec3(0.f, -1.f, 0.f), fvec3(1.f, 1.f, 1.f), 0.0f);
-Plane p4(fvec3(0.f, -12.f, 0.f), fvec3(0.f, 1.f, 0.f), fvec3(1.f, 1.f, 1.f), 0.0f);
-Plane p5(fvec3(0.f, 0.f, -2.f), fvec3(0.f, 0.f, -1.f), fvec3(1.f, 1.f, 1.f),  0.7f);
-Plane p6(fvec3(0.f, 0.f, 22.f), fvec3(0.f, 0.f, 1.f), fvec3(1.f, 1.f, 1.f), 0.7f);
+Plane p1(fvec3(12.f, 0.f, 0.f), fvec3(-1.f, 0.f, 0.f), fvec3(1.f, 1.f, 1.f), 0.0f, 0);
+Plane p2(fvec3(-12.f, 0.f, 0.f), fvec3(1.f, 0.f, 0.f), fvec3(1.f, 1.f, 1.f), 0.0f, 0);
+Plane p3(fvec3(0.f, 12.f, 0.f), fvec3(0.f, -1.f, 0.f), fvec3(1.f, 1.f, 1.f), 0.0f, 0);
+Plane p4(fvec3(0.f, -12.f, 0.f), fvec3(0.f, 1.f, 0.f), fvec3(1.f, 1.f, 1.f), 0.0f, 0);
+Plane p5(fvec3(0.f, 0.f, -2.f), fvec3(0.f, 0.f, -1.f), fvec3(1.f, 1.f, 1.f),  0.7f, 0);
+Plane p6(fvec3(0.f, 0.f, 22.f), fvec3(0.f, 0.f, 1.f), fvec3(1.f, 1.f, 1.f), 0.7f, 0);
 
 // Window/event management
 Application fw;
@@ -49,7 +49,7 @@ int main(int argc, char* argv[])
     config::setFromFlags(argc, argv, "-s", [&](auto s) {util::srand(atol(s));}, "-r", [&](auto r) {rt.setRecursionDepth(atol(r));});
 
     // Camera is at (-10, -10, 0), looking at (0, 0, 10)
-    cam.lookAt({ -10, -10, 0}, { 0, 0, 10 });
+    cam.lookAt({ -0, -0, 0}, { 0, 0, 10 });
 
     // Clear the screen in preparation of drawing
     util::debugPrint("Clearing");
@@ -60,12 +60,12 @@ int main(int argc, char* argv[])
     rt.addObject(&s1);
     rt.addObject(&s2);
     rt.addObject(&s3);
-    //rt.addObject(&p1);
-    //rt.addObject(&p2);
-    //rt.addObject(&p3);
+    rt.addObject(&p1);
+    rt.addObject(&p2);
+    rt.addObject(&p3);
     rt.addObject(&p4);
-    //rt.addObject(&p5);
-    //rt.addObject(&p6);
+    rt.addObject(&p5);
+    rt.addObject(&p6);
 
     // Create random lights, and add them to the scene
     for (int i = 0; i < 15; ++i)
