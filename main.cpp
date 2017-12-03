@@ -46,7 +46,10 @@ Camera cam(fw.width(), fw.height(), 10.f, 5.f);
 int main(int argc, char* argv[])
 {
     util::srand();
-    config::setFromFlags(argc, argv, "-s", [&](auto s) {util::srand(atol(s));}, "-r", [&](auto r) {rt.setRecursionDepth(atol(r));});
+    config::setFromFlags(argc, argv,
+        "-s", [&](const char* s) -> void {util::srand(atol(s));},
+        "-r", [&](const char* r) -> void {rt.setRecursionDepth(atol(r));}
+    );
 
     // Camera is at (-10, -10, 0), looking at (0, 0, 10)
     cam.lookAt({ -10, -10, 0}, { 0, 0, 10 });
