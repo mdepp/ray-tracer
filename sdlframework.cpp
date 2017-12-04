@@ -10,8 +10,8 @@
 
 SDLFramework::SDLFramework()
 //   : m_width(320), m_height(240),
-//   : m_width(1920), m_height(1080),
-   : m_width(1920/2), m_height(1080/2),
+   : m_width(1920), m_height(1080),
+//   : m_width(1920/2), m_height(1080/2),
     m_updatePeriod(1000)
 {
     // Initialize SDL

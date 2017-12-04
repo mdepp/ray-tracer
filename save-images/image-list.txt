@@ -1,0 +1,3 @@
+tilted: a render of scene 0, showcasing reflection (without shadows)
+shadows: an earlier version of scene 3, showcasing shadows
+minimal: render of scene 1
