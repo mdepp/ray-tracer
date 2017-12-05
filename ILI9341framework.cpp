@@ -18,6 +18,8 @@ ILI9341Framework::ILI9341Framework()
     // Initialize general Arduino-specific libraries
     init();
     Serial.begin(115200);
+    for (int i = 8; i < 64; ++i) Serial.write(0);
+    Serial.write((char)3);
     // Initialize screen and rotate to the standard orientation used in class.
     m_tft.begin();
     m_tft.setRotation(3);
@@ -57,6 +59,7 @@ void ILI9341Framework::drawPixel(uint16_t x, uint16_t y, fvec3 colour)
     // Write data one byte at a time, first low, then high
     Serial.write(lowByte(encoded));
     Serial.write(highByte(encoded));
+    Serial.flush();
 }
 uint16_t ILI9341Framework::width()
 {

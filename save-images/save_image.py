@@ -11,6 +11,10 @@ try:
 
     with serial.Serial(port_name, 115200, timeout=1) as ser, open(file_name, 'wb') as file:
         bar = progressbar.ProgressBar()
+        while True:
+            if ser.in_waiting > 0:
+                if ser.read() == b'\x03':
+                    break
         for x in bar(range(IMAGE_WIDTH)):
             for y in range(IMAGE_HEIGHT):
                 # Wait for image data
@@ -18,21 +22,15 @@ try:
                     byte_read = ser.read()
                     if byte_read == b'\x02':
                         break
-                    print(byte_read.decode('utf-8', errors='ignore'), end='')
+                    print(byte_read.decode('utf-8', errors='replace'), end='')
                 # Read in image data
-                while True:
-                    low = ser.read()
-                    if low:
-                        file.write(low)
-                        break
-                while True:
-                    high = ser.read()
-                    if high:
-                        file.write(high)
-                        break
+                while ser.in_waiting < 2:
+                    pass
+                file.write(bytes(ser.read()))  # low
+                file.write(bytes(ser.read()))  # high
 
         file.flush()
-                
+
 
     print('Finished.')
 
