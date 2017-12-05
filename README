@@ -51,15 +51,28 @@ Wiring instructions: the Adafruit ILI9341 was connected according to the wiring 
 Building and Running
 ===========================================================
 
+Command-Line Parameters:
+  * Various configuration variables may be set at runtime with command-line parameters. Currently implemented options are:
+
+  ------------------------------------------------
+  | Flag | Values | Meaning                      |
+  |----------------------------------------------|
+  | -s   | uint32 | Seed the RBG with this value |
+  | -r   | uint32 | Maximum recursion depth      |
+  | -sc  | 0-3    | Renders numbered scene       |
+  ------------------------------------------------
+
+  These are specified in flag-value pairs, e.g. "-r 5 -sc 2" specifies that the ray-tracer should display scene 2 with recursion-depth 5. Where to put the argument string is specified in the How to Run sections below.
+
 How to Build (Arduino)
   * Requires: avr-g++ (with c++ 14 support), arduino-ua (should include Adafruit_GFX and Adafruit_ILI9341)
   * Make sure the terminal is in the base folder. Type:
-        
+
         make
 
 How to Run (Arduino)
   * Make sure the terminal is in the base folder, and that the Arduino is connected to /dev/ttyACM0. Type:
-        
+
         make upload
 
 How to Build (Windows)
@@ -76,7 +89,7 @@ How to Run (Windows)
   * From the command prompt in the base folder, type
 
         cd x64\Release
-        ray-tracer.exe
+        ray-tracer.exe [args]
 
     * The program can also be run directly from the file explorer as usual
 
@@ -85,28 +98,28 @@ How to Build (Linux)
     *  SDL 2 (sudo apt-get install libsdl2-dev)
     *  CMake
   * Make sure the terminal is in the base folder. First, setup the makefile by typing:
-        
+
         mkdir build-cmake
         cd build-cmake
         cmake ..
-        
+
   * Now the project can be built with:
-        
+
         make
 
 How to Run (Linux)
   * From the build-cmake folder (see How to Build), type
-        
-        ./ray-tracer
+
+        ./ray-tracer [args]
 
 How to save an Arduino render (Linux)
   * Requirements:
     * pyserial (pip3 install pyserial)
     * progressbar2 (pip3 install progressbar2)
   * After building and running on the Arduino, navigate to the save-images subfolder, and type
-        
+
         python3 save_image.py /dev/ttyACM0 filename
-  
+
   * If the process does not begin saving immediately, press the reset button on the Arduino.
   * This will collect the image data from the Arduino via the Serial port, storing it for later
 
@@ -115,20 +128,20 @@ How to restore an Arduino render (Linux)
     * pyserial (pip3 install pyserial)
     * progressbar2 (pip3 install progressbar2)
   * Navigate to the save-images subfolder. Run
-      
-        make upload
-  
+
+        make upload args="[args]"
+
   * Then type
-      
+
         python3 load_image.py /dev/ttyACM0 filename
-  
+
   * This will stream the image data to the Arduino, where it will display to the screen
 
 File Structure
 ===========================================================
 
 List of files and folders that should be present:
-   
+
     |-- save-images
         |-- display_image.cpp
         |-- load_image.py
