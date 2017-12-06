@@ -64,7 +64,7 @@ int main(int argc, char* argv[])
 
     // Clear the screen in preparation of drawing
     util::debugPrint("Clearing");
-    fw.clear({0.f, 0.f, 0.f});
+    fw.clear({0.0f, 0.0f, 0.0f});
 
     // Draw scene
     util::debugPrint("Drawing objects");
@@ -134,9 +134,6 @@ void initScene(int scene)
             fvec3 pos(util::random(20)-10, util::random(20)-10, util::random(5)+10);
             rt.addPointLight(pos, 30.f, fvec3((util::random(100)/100.f), (util::random(100)/100.f), (util::random(100)/100.f)));
         }
-        
-        
-        
     }
     else
     {
