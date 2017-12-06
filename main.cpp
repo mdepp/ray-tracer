@@ -112,7 +112,7 @@ void initScene(int scene)
     {
         rt.addObject(&s11);
         rt.addObject(&p11);
-        
+
         rt.addDirectionalLight(
             normalize(fvec3(1.f, 0.f, 1.f)),
             fvec3(.5f, .5f, .5f)
@@ -134,6 +134,7 @@ void initScene(int scene)
             fvec3 pos(util::random(20)-10, util::random(20)-10, util::random(5)+10);
             rt.addPointLight(pos, 30.f, fvec3((util::random(100)/100.f), (util::random(100)/100.f), (util::random(100)/100.f)));
         }
+
     }
     else
     {

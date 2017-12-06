@@ -40,8 +40,8 @@ int main()
             uint32_t y = (i+k)%IMAGE_HEIGHT;
             uint32_t low = Serial.read();
             uint32_t high = Serial.read();
-            
-            tft.drawPixel(x, y, high*256ul + low);
+
+            tft.drawPixel(x, IMAGE_HEIGHT-1-y, high*256ul + low);
         }
     }
 /*

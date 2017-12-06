@@ -51,7 +51,7 @@ public:
     template<typename...Args>
     bool addDirectionalLight(Args&& ...args);
     /*
-     * Set the ambient light of the scene to be rendered. Arguments are the 
+     * Set the ambient light of the scene to be rendered. Arguments are the
      * arguments to AmbientLight's c-tor. Returns true iff the light was
      * successfully added.
      */
@@ -63,7 +63,7 @@ public:
      * and true otherwise.
      */
     bool render(WindowFramework* fw, Camera* cam);
-    
+
     /*
      * Set the maximum recursion depth of the ray-tracing algorithm.
      */
