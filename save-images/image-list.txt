@@ -1,3 +1,24 @@
-tilted: a render of scene 0, showcasing reflection (without shadows)
-shadows: an earlier version of scene 3, showcasing shadows
-minimal: render of scene 1
+minimal
+ - args="-s 2 -sc 1 -r 1"
+ - Time elapsed: 0:04:18
+
+shadows
+ - args="-s 0 -sc 0 -r 5"
+ - Time elapsed: 2:15:05
+
+straight
+ - args="-s 0 -sc 2 -r 5"
+ - Time elapsed: 2:11:31
+
+ring
+ - args="-s 5 -sc 3 -r 5"
+ - Time elapsed: 0:18:44
+
+shadows2
+ - args="-s 1512568858 sc 0 -r 5"
+ - Time elapsed: 2:10:47
+
+refraction
+ - args="-s 15 -sc 4 -r 4"
+ - Time elapsed: 0:03:34
+

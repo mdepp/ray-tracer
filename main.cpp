@@ -36,6 +36,10 @@ Plane p11(fvec3(0.f, 0.f, 15.f), fvec3(0.f, 0.f, -1.f), fvec3(1.f, 1.f, 1.f), 0.
 
 Sphere s21(fvec3(0.f, 0.f, 13.f), 2.f, fvec3(1.f, 1.f, 1.f), 1.f);
 
+Sphere s31({0, 0, 7}, 2.f, {1, 1, 1}, 0);
+Sphere s32({1, 1, 5}, 2.f, {0, 1, 0}, 0, 0.5, 1.1);
+
+
 // Window/event management
 Application fw;
 
@@ -135,6 +139,21 @@ void initScene(int scene)
             rt.addPointLight(pos, 30.f, fvec3((util::random(100)/100.f), (util::random(100)/100.f), (util::random(100)/100.f)));
         }
 
+    }
+    else if (scene == 4)
+    {
+        cam.lookAt({ 0, 0, 0}, { 0, 0, 10 });
+
+        rt.addObject(&s31);
+        rt.addObject(&s32);
+
+        rt.setAmbientLight(
+            fvec3(0.3f, 0.3f, 0.3f)
+        );
+        rt.addDirectionalLight(
+            normalize(fvec3(1.f, 0.f, 0.5f)),
+            fvec3(.5f, .5f, .5f)
+        );
     }
     else
     {

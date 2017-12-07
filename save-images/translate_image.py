@@ -11,9 +11,9 @@ def decodeColour(low, high):
     #except:
     #    col16 = int(0)
 
-    r = (col16 & 31) / 32
+    b = (col16 & 31) / 32
     g = ((col16 >> 5) & 63) / 64
-    b = ((col16 >> 11) & 31) / 32
+    r = ((col16 >> 11) & 31) / 32
     return (int(r*255), int(g*255), int(b*255))
 
 
@@ -28,4 +28,4 @@ with open(file_name, 'rb') as source:
             high = source.read(1)
             pixels[i, j] = decodeColour(low, high)
 
-img.show()
+img.show(title=file_name)

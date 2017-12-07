@@ -124,7 +124,11 @@ namespace config
             // argc and local_argv are now set equivalently to how they would be in a
             // desktop environment.
             internal::setFromFlags(argc, local_argv, util::forward<Args>(args)...);
-            // Free allocated memory. I'm about 80% certain a single call works
+            // Free allocated memory.
+            for (int i = 0; i < MAX_ARGC; ++i)
+            {
+                free(local_argv[i]);
+            }
             free(local_argv);
         #else
             internal::setFromFlags(argc, argv, util::forward<Args>(args)...);
