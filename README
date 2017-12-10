@@ -116,8 +116,8 @@ How to save an Arduino render (Linux)
   * WARNING: Saving an Arduino render will overwrite the file it is saved to
       without warning (which may overwrite a 3-hour render or even a code file).
       Also note that there are several pre-rendered images included with this
-      project; the file file names and the arguments to reproduce each are noted
-      in "save-images/image-list.txt".
+      project; the file names and the arguments to reproduce each are noted in
+      "save-images/image-list.txt".
     
   * Requirements:
     * pyserial (pip3 install pyserial)
@@ -145,6 +145,9 @@ How to restore an Arduino render (Linux)
 
 File Structure
 ===========================================================
+  
+  * Anything in save-images/ is not technically part of our code submission, but
+    is included since the utilities might be useful to evaluate the project.
 
 List of files and folders that should be present:
 
