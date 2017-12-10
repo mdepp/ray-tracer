@@ -120,6 +120,7 @@ How to save an Arduino render (Linux)
       "save-images/image-list.txt".
     
   * Requirements:
+    * Python 3
     * pyserial (pip3 install pyserial)
     * progressbar2 (pip3 install progressbar2)
   * After building and running on the Arduino, navigate to the save-images subfolder, and type
@@ -131,6 +132,7 @@ How to save an Arduino render (Linux)
 
 How to restore an Arduino render (Linux)
   * Requirements:
+    * Python 3
     * pyserial (pip3 install pyserial)
     * progressbar2 (pip3 install progressbar2)
   * Navigate to the save-images subfolder. Run
@@ -142,6 +144,20 @@ How to restore an Arduino render (Linux)
         python3 load_image.py /dev/ttyACM0 filename
 
   * This will stream the image data to the Arduino, where it will display to the screen
+
+How to preview an Arduino render (Windows/Linux)
+  * Requirements:
+    * Python 3
+
+  * Navigate to the save-images subfolder. Run
+
+        python3 translate_image.py filename     (Linux)
+    or
+        python translate_image.py filename      (Windows)
+
+  * This will open a window that will display a preview of the saved image as it
+    should appear when sent to the Arduino.
+
 
 File Structure
 ===========================================================
@@ -155,6 +171,7 @@ List of files and folders that should be present:
         |-- display_image.cpp
         |-- load_image.py
         |-- save_image.py
+        |-- translate_image.py
         |-- image-list.txt
         |-- Makefile
         |-- minimal
@@ -189,5 +206,8 @@ List of files and folders that should be present:
     |-- windowframework.h
     |-- CMakeLists.txt
     |-- Makefile
+    |-- ray-tracer.sln
+    |-- ray-tracer.vcxproj
+    |-- ray-tracer.vcxproj.filters
     |-- README
     |-- update_config.sh
