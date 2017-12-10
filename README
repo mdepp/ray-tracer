@@ -113,6 +113,12 @@ How to Run (Linux)
         ./ray-tracer [args]
 
 How to save an Arduino render (Linux)
+  * WARNING: Saving an Arduino render will overwrite the file it is saved to
+      without warning (which may overwrite a 3-hour render or even a code file).
+      Also note that there are several pre-rendered images included with this
+      project; the file file names and the arguments to reproduce each are noted
+      in "save-images/image-list.txt".
+    
   * Requirements:
     * pyserial (pip3 install pyserial)
     * progressbar2 (pip3 install progressbar2)
@@ -146,7 +152,14 @@ List of files and folders that should be present:
         |-- display_image.cpp
         |-- load_image.py
         |-- save_image.py
+        |-- image-list.txt
         |-- Makefile
+        |-- minimal
+        |-- shadows
+        |-- shadows2
+        |-- straight
+        |-- ring
+        |-- refraction
     |-- application.h
     |-- array.h
     |-- camera.cpp
