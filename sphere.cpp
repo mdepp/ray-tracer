@@ -1,6 +1,6 @@
 /*
  * File: sphere.cpp
- * Authors: Alexander Epp (1487716) and Mitchell Epp (1498821)
+ * Authors: Alexander Epp, Mitchell Epp
  * Project: CMPUT274 Final Project
  * Description: Implementation of Sphere methods
  */
@@ -21,7 +21,7 @@ Sphere::Sphere(fvec3 center, float radius, fvec3 colour, float reflectionCoeffic
 }
 
 /*
- * Returns the least number greater than epsilon among 'first' and 'second'. If both
+ * Returns the least number greater than 'epsilon' among 'first' and 'second'. If both
  * are are less than epsilon, returns a negative result (but not necessarily either number).
  */
 static float findLeastGreaterThan(float first, float second, float epsilon)

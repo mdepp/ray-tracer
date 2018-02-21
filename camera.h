@@ -1,6 +1,6 @@
 /*
  * File: camera.h
- * Authors: Alexander Epp (1487716) and Mitchell Epp (1498821)
+ * Authors: Alexander Epp, Mitchell Epp
  * Project: CMPUT274 Final Project
  * Description: A camera class for translating pixels to rays
  */

@@ -1,6 +1,6 @@
 /*
- * File: ILI9341framework.h
- * Authors: Alexander Epp (1487716) and Mitchell Epp (1498821)
+ * File: sdlframework.h
+ * Authors: Alexander Epp, Mitchell Epp
  * Project: CMPUT274 Final Project
  * Description: Implement the WindowFramework interface for
  *              desktop machines using SDL2. This updates the

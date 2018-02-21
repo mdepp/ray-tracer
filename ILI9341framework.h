@@ -1,6 +1,6 @@
 /*
  * File: ILI9341framework.h
- * Authors: Alexander Epp (1487716) and Mitchell Epp (1498821)
+ * Authors: Alexander Epp, Mitchell Epp
  * Project: CMPUT274 Final Project
  * Description: Implentation of WindowFramework interface that
  *              runs on an Arduino, using AdafruitILI9341.
@@ -11,8 +11,7 @@
 #include "windowframework.h"
 #include <Adafruit_ILI9341.h>
 /*
- * It is assumed that the screen is wired as in class; in particular, it
- * expects CS <--> 10 and D/C <--> 9.
+ * For wiring, it is assumed that CS <--> 10 and D/C <--> 9 (see Readme)
  * 
  * This class also initializes all Arduino functions, and the Arduino Serial
  * library, which are needed for utility functions on the Arduino.

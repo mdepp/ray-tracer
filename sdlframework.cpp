@@ -1,5 +1,9 @@
 /*
- * Contains implementation of the SDLFramework class from sdlframework.h
+ * File: sdlframework.cpp
+ * Authors: Alexander Epp, Mitchell Epp
+ * Project: CMPUT274 Final Project
+ * Description: Contains implementation of the SDLFramework class from
+ *              sdlframework.h
  */
 
 #ifndef ARDUINO_BUILD

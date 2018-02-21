@@ -1,6 +1,6 @@
 /*
  * File: util.cpp
- * Authors: Alexander Epp (1487716) and Mitchell Epp (1498821)
+ * Authors: Alexander Epp, Mitchell Epp
  * Project: CMPUT274 Final Project
  * Description: Implementation of utility functions
  */
@@ -47,20 +47,6 @@ namespace util
 		slcrg(getSeed<int32_t, sizeof(int32_t)>(0, 50));
 		//::randomSeed(getSeed<int32_t, sizeof(int32_t)>(0, 50));
 	}
-
-	uint8_t* getStackPointer()
-    {
-        return (uint8_t *)(SP);
-    }
-	uint32_t getAvailableMemory()
-    {
-        static uint8_t* stackptr, *heapptr;
-        stackptr = (uint8_t *)malloc(4); // use stackptr temporarily
-        heapptr = stackptr; // save value of heap pointer
-        free(stackptr); // free up the memory again (sets stackptr to 0)
-        stackptr = (uint8_t *)(SP); // save value of stack pointer
-        return (stackptr-heapptr);
-    }
 #else
 	/*int32_t random(int32_t maxval)
 	{
@@ -71,14 +57,5 @@ namespace util
 		slcrg(std::time(0));
 		//std::srand(std::time(0));
 	}
-
-	uint8_t* getStackPointer()
-    {
-        return nullptr;
-    }
-		uint32_t getAvailableMemory()
-    {
-        return 0;
-    }
 #endif
 }

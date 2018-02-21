@@ -1,6 +1,6 @@
 /*
  * File: object.h
- * Authors: Alexander Epp (1487716) and Mitchell Epp (1498821)
+ * Authors: Alexander Epp, Mitchell Epp
  * Project: CMPUT274 Final Project
  * Description: Contains an interface used by all objects to be rendered by
  *              renderer. This guarantees each object knows about ray intersection
@@ -19,8 +19,15 @@
  *     normal: the surface normal of the object at the intersection point
  *     reflectionCoefficient: fraction of light that is reflected off of the
  *                            object at intersection. The rest of the light on
- *                            that point comes from diffuse lighting.
- */
+ *                            object at intersection.
+ *     transmissionCoefficient: The fraction of light that is transmitted
+ *                              through the object (is refracted upon
+ *                              intersection). The remaining light on this
+ *                              point of the object, without reflection or
+ *                              transmission, comes from diffuse lighting.
+ *     refractiveIndex: The index of refraction of object at the intersection
+ *                      point.
+  */
 struct IntersectionData
 {
     fvec3 intersection;
@@ -41,7 +48,9 @@ public:
      * with this object (this distance is negative if there is no intersection).
      * If there is an intersection, and 'intersectionData' is not nullptr,
      * populate 'intersectionData' with the attributes of the first such
-     * intersection.
+     * intersection. Intersections that are within 'epsilon' of the origin of the
+     * ray are considered to be the result of floating point errors, and are thus
+     * ignored.
      */
     virtual float intersect(Ray ray, IntersectionData* intersectionData, float epsilon) = 0;
 };

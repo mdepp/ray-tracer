@@ -1,6 +1,6 @@
 /*
  * File: config.h
- * Authors: Alexander Epp (1487716) and Mitchell Epp (1498821)
+ * Authors: Alexander Epp, Mitchell Epp
  * Project: CMPUT274 Final Project
  * Description: Loads configuration parameters. On the Arduino, this
  *              is done by setting the ARDUINO_ARGS variable at compile

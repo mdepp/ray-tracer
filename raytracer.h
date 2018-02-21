@@ -1,6 +1,6 @@
 /*
  * File: raytracer.h
- * Authors: Alexander Epp (1487716) and Mitchell Epp (1498821)
+ * Authors: Alexander Epp, Mitchell Epp
  * Project: CMPUT274 Final Project
  * Description: Contains the RayTracer class, which traces the path of rays cast
  *              by the Camera, and renders the results to a WindowFramework.
@@ -106,7 +106,7 @@ private:
     fvec3 m_backgroundColour;
     const float m_minIntensityThreshold; // Stop recursing once light intensity is below this threshold
     uint16_t m_maxRecursionDepth;
-    const float m_minRayLength; // Rays must intersect at a point beyond this length
+    const float m_minRayLength; // Rays must intersect at a point beyond this length from the ray origin
 
     Array<Object*, NumObjects> m_objects;
     Array<PointLight, NumPointLights> m_pointLights;
