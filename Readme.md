@@ -3,6 +3,10 @@ Ray Tracer
 
 Authors: Alex Epp ([alex-epp](https://github.com/alex-epp)), Mitchell Epp ([mdepp](https://github.com/mdepp))
 
+![](images/shadows2.png)
+![](images/ring.png)
+![](images/large.png)
+
 ## Credits and Code Re-use
 There are several instances in which code or algorithms from other sources have been used. Each instance is acknowledged in the source code (typically with a link)
  * Object/ray intersection algorithms were taken from Wikipedia
