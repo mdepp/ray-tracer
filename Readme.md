@@ -28,7 +28,7 @@ Various configuration variables may be set at runtime with command-line paramete
 
   | Flag | Values | Meaning                      |
   |------|--------|------------------------------|
-  | -s   | uint32 | Seed the RBG with this value |
+  | -s   | uint32 | Seed the RNG with this value |
   | -r   | uint32 | Maximum recursion depth      |
   | -sc  | 0-3    | Renders numbered scene       |
 
