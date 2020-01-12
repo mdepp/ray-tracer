@@ -3,9 +3,18 @@ Ray Tracer
 
 Authors: Alex Epp ([alex-epp](https://github.com/alex-epp)), Mitchell Epp ([mdepp](https://github.com/mdepp))
 
-![](images/shadows2.png)
-![](images/ring.png)
-![](images/large.png)
+<table>
+  <tr>
+    <td><img src="images/minimal.png"/></td>
+    <td><img src="images/refraction.png"/></td>
+    <td><img src="images/ring.png"/></td>
+    <td><img src="images/shadows2.png"/></td>
+  </tr>
+  <tr>
+    <td colspan="4"><img src="images/large.png"/></td>
+  </tr>
+</table>
+
 
 ## Credits and Code Re-use
 There are several instances in which code or algorithms from other sources have been used. Each instance is acknowledged in the source code (typically with a link)
