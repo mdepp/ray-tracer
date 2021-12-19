@@ -1,6 +1,6 @@
 /*
  * File: array.h
- * Authors: Alexander Epp, Mitchell Epp
+ * Authors: Alexander Epp, Rain Epp
  * Project: CMPUT274 Final Project
  * Description: A static-memory array of a maximum size
  */

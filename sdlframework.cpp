@@ -1,6 +1,6 @@
 /*
  * File: sdlframework.cpp
- * Authors: Alexander Epp, Mitchell Epp
+ * Authors: Alexander Epp, Rain Epp
  * Project: CMPUT274 Final Project
  * Description: Contains implementation of the SDLFramework class from
  *              sdlframework.h

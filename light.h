@@ -1,6 +1,6 @@
 /*
  * File: light.h
- * Authors: Alexander Epp, Mitchell Epp
+ * Authors: Alexander Epp, Rain Epp
  * Project: CMPUT274 Final Project
  * Description: Contains structures for storing information about lights.
  */

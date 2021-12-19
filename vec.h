@@ -1,6 +1,6 @@
 /*
  * File: vec.h
- * Authors: Alexander Epp, Mitchell Epp
+ * Authors: Alexander Epp, Rain Epp
  * Project: CMPUT274 Final Project
  * Description: Utilities for 4- and 3-dimensional vectors.
  */

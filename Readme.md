@@ -1,7 +1,7 @@
 Ray Tracer
 ===========================================================
 
-Authors: Alex Epp ([alex-epp](https://github.com/alex-epp)), Mitchell Epp ([mdepp](https://github.com/mdepp))
+Authors: Alex Epp ([alex-epp](https://github.com/alex-epp)), Rain Epp ([mdepp](https://github.com/mdepp))
 
 <table>
   <tr>

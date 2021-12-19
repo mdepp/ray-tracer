@@ -1,6 +1,6 @@
 /*
  * File: object.h
- * Authors: Alexander Epp, Mitchell Epp
+ * Authors: Alexander Epp, Rain Epp
  * Project: CMPUT274 Final Project
  * Description: Contains an interface used by all objects to be rendered by
  *              renderer. This guarantees each object knows about ray intersection

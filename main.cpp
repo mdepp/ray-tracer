@@ -1,6 +1,6 @@
 /*
  * File: main.cpp
- * Authors: Alexander Epp, Mitchell Epp
+ * Authors: Alexander Epp, Rain Epp
  * Project: CMPUT274 Final Project
  * Description: Program entry point. Constructs a scene from Spheres,
  *              Planes and a Camera, which it renders using RayTracer onto

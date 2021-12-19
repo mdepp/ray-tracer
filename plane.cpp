@@ -1,6 +1,6 @@
 /*
  * File: plane.cpp
- * Authors: Alexander Epp, Mitchell Epp
+ * Authors: Alexander Epp, Rain Epp
  * Project: CMPUT274 Final Project
  * Description: Implementations of Plane functions.
  */

@@ -1,6 +1,6 @@
 /*
  * File: raytracer.h
- * Authors: Alexander Epp, Mitchell Epp
+ * Authors: Alexander Epp, Rain Epp
  * Project: CMPUT274 Final Project
  * Description: Contains the RayTracer class, which traces the path of rays cast
  *              by the Camera, and renders the results to a WindowFramework.

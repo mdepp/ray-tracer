@@ -1,6 +1,6 @@
 /*
  * File: ILI9341framework.h
- * Authors: Alexander Epp, Mitchell Epp
+ * Authors: Alexander Epp, Rain Epp
  * Project: CMPUT274 Final Project
  * Description: Implentation of WindowFramework interface that
  *              runs on an Arduino, using AdafruitILI9341.

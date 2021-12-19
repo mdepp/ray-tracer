@@ -1,6 +1,6 @@
 /*
  * File: sdlframework.h
- * Authors: Alexander Epp, Mitchell Epp
+ * Authors: Alexander Epp, Rain Epp
  * Project: CMPUT274 Final Project
  * Description: Implement the WindowFramework interface for
  *              desktop machines using SDL2. This updates the
